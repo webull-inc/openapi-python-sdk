@@ -1,0 +1,14 @@
+Webull OpenAPI Python SDK
+Copyright 2022 Webull Technologies Limited.
+
+This product includes software developed at
+The Apache Software Foundation (http://www.apache.org/).
+
+=======================================================================
+
+aliyun-python-sdk-core:
+-----
+This product contains a modified portion of 'aliyun-python-sdk-core' developed by Alibaba Group Holding Ltd.
+(https://github.com/aliyun/aliyun-openapi-python-sdk).
+
+* Copyright 1999-2015 Alibaba Group Holding Ltd.

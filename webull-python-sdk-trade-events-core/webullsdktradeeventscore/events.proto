@@ -1,0 +1,31 @@
+syntax = "proto3";
+package grpc.trade.event;
+
+service EventService {
+	rpc Subscribe(SubscribeRequest) returns (stream SubscribeResponse) {}
+}
+
+message SubscribeRequest {
+	 uint32 subscribeType = 1;
+	 int64 timestamp = 2;
+	 string contentType = 3;
+	 string payload = 4;
+	 repeated string accounts = 5;
+}
+
+message SubscribeResponse {
+	 EventType eventType = 1;
+	 uint32 subscribeType = 2;
+	 string contentType = 3;
+	 string payload = 4;
+	 string requestId = 5;
+	 int64  timestamp = 6;
+}
+
+enum EventType {
+	SubscribeSuccess = 0;
+	Ping = 1;
+	AuthError = 2;
+	NumOfConnExceed = 3;
+	SubscribeExpired = 4;
+}

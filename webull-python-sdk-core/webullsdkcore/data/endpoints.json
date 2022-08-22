@@ -1,0 +1,13 @@
+{
+    "default_region": "us",
+    "regions": ["us", "hk"],
+    "region_code_mapping": {
+        "us": "com",
+        "hk": "hk"
+    },
+    "regional_endpoint_pattern":  {
+        "api": "api.webull.[Region]",
+        "quotes-api": "quotes-api.webull.[Region]",
+        "events-api": "events-api.webull.[Region]"
+    }
+}

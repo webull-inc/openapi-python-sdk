@@ -1,0 +1,15 @@
+{
+    "api": {
+        "RetryableMethods": [
+            "GET"
+        ],
+        "RetryableThrottlingErrors": [
+            "TOO_MANY_REQUESTS"
+        ],
+        "RetryableNormalErrors":[
+            "SERVICE_NOT_AVAILABLE",
+            "GATEWAY_TIMEOUT",
+            "INTERNAL_ERROR"
+        ]
+    }
+}
