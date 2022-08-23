@@ -2,21 +2,21 @@ name: PyPI-CI
 
 # 点击star即可构建
 
-on:
-  watch:
-    types: started
+# on:
+#   watch:
+#     types: started
 
 # push 到main分支才会构建，忽略docs/**和LICENSE等目录
-#on:
-#  push:
-#    branches:
-#    - main
-#    paths-ignore:
-#      - 'docs/**'
-#      - 'webull-python-sdk-demos/**'
-#      - 'LICENSE'
-#      - 'NOTICE'
-#      - 'README.md'
+on:
+ push:
+   branches:
+   - main
+   paths-ignore:
+     - 'docs/**'
+     - 'webull-python-sdk-demos/**'
+     - 'LICENSE'
+     - 'NOTICE'
+     - 'README.md'
 
 permissions:
   contents: read
