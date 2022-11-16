@@ -4,7 +4,7 @@ openapi enables SSL/TLS for all application protocols.
 
 - The protocol used by the HTTP API is `HTTPS`.
 - The protocol used for market subscription is `MQTTS`.
-- The protocol used for trade events subscription is `GRPC`, which supports SSL/TLS by default.
+- The protocol used for trade events subscription/Quotes is `GRPC`, which supports SSL/TLS by default.
 
 The verification of the server-side certificate is automatically completed by the built-in root certificate chain. During the process of using the SDK, if you encounter certificate-related errors, you can first confirm the root certificate path used in the python environment.
 

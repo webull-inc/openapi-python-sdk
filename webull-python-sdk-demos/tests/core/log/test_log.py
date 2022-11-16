@@ -1,4 +1,3 @@
-# coding=utf-8
 import unittest
 import sys
 from webullsdkcore.client import ApiClient

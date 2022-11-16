@@ -16,9 +16,17 @@
 # under the License.
 
 # coding=utf-8
+from webullsdkmdata.quotes.grpc.pb import quote_pb2
+from webullsdkmdata.request.grpc.base_request import GRPCBaseRequest
 
-from webullsdkcore.request import ApiRequest
-class GetStreamingTokenRequest(ApiRequest):
-    def __init__(self):
-        ApiRequest.__init__(self, "/market-data/streaming/token", version='v1')
 
+class GetHistoricalBarsRequest(GRPCBaseRequest):
+
+    def __init__(self, symbol, category, timespan, count='200'):
+        request = quote_pb2.BarsRequest(
+            symbol=symbol,
+            category=category,
+            timespan=timespan,
+            count=count
+        )
+        GRPCBaseRequest.__init__(self, "/market-data/bars", request, version='v1')

@@ -83,5 +83,5 @@ class DefaultQuotesRetryCondition(RetryCondition):
         return self._condition.should_retry(retry_policy_context)
 
 class DefaultQuotesRetryPolicy(RetryPolicy):
-    def __init__(self, max_retry_times=-1, fixed_delay=5000):
+    def __init__(self, max_retry_times=-1, fixed_delay=10000):
         RetryPolicy.__init__(self, DefaultQuotesRetryCondition(max_retry_times), FixedDelayStrategy(fixed_delay))

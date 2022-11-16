@@ -48,3 +48,13 @@ def _on_log_func(level, log_data_buf):
     print("level:%s, buf:%s" % (level, log_data_buf))
 enents_client.on_log = _on_log_func
 ```
+## Quotes API
+
+```python
+from webullsdkquotescore.grpc.grpc_client import GrpcApiClient
+
+client = GrpcApiClient(app_key="<your_app_key>", app_secret="<your_app_secret>", region_id="hk")
+log_format='%(thread)d %(asctime)s %(name)s %(levelname)s %(message)s'
+log_file_path='<my_file_path>'
+client.set_file_logger(path=log_file_path, format_string=log_format)
+```

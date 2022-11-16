@@ -1,6 +1,11 @@
 import os
 from setuptools import setup, find_packages
 
+# for resolving grpc cython libs installation issue: https://github.com/grpc/grpc/issues/25082
+if hasattr(os, "uname") and os.uname().machine == 'arm64' and os.uname().sysname == 'Darwin':
+    os.system("export GRPC_PYTHON_BUILD_SYSTEM_OPENSSL=1")
+    os.system("export GRPC_PYTHON_BUILD_SYSTEM_ZLIB=1")
+
 PACKAGE = "webullsdkquotescore"
 DESCRIPTION = "The quotes core module of Webull Python SDK."
 TOPDIR = os.path.dirname(__file__) or "."
@@ -16,8 +21,10 @@ with open("README.rst") as fp:
 
 requires = [
     "paho-mqtt==1.6.1",
+    "grpcio==1.43.0",
+    "grpcio-tools==1.43.0",
     "protobuf==3.19.3",
-    "webull-python-sdk-core==0.1.0"
+    "webull-python-sdk-core==0.1.1"
 ]
 
 setup_args = {
@@ -27,10 +34,10 @@ setup_args = {
     'description': DESCRIPTION,
     'long_description_content_type': RD_CONTENT_TYPE,
     'license': LICENSE,
-    'url': URL, 
+    'url': URL,
     'packages': find_packages(exclude=["tests*"]),
     'platforms': 'any',
-    'install_requires': requires 
+    'install_requires': requires
 }
 
 setup(name='webull-python-sdk-quotes-core', **setup_args)
