@@ -1,4 +1,3 @@
-# coding=utf-8
 import unittest
 from webullsdkcore.utils import common
 from webullsdkmdata.common.category import Category

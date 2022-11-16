@@ -1,4 +1,3 @@
-# coding=utf-8
 
 from webullsdkmdata.quotes.subscribe.basic_quote_decoder import BasicQuoteDecoder
 from webullsdkmdata.quotes.subscribe.message_pb2 import QuoteData

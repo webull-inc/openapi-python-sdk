@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package openapi;
+
+// The greeting service definition.
+service Quote {
+
+  rpc StreamRequest (stream ClientRequest) returns (stream ClientResponse)  {
+
+  }
+
+}
+
+// The request message containing the user's name.
+message ClientRequest {
+  MsgType type = 1;
+  string requestId = 2;
+  string path = 3;
+  bytes payload = 4;
+}
+
+// The response message containing the greetings
+message ClientResponse {
+  MsgType type = 1;
+  string requestId = 2;
+  uint32 code = 3;
+  string msg = 4;
+  string path = 5;
+  bytes payload = 6;
+}
+
+enum MsgType {
+	Ping = 0;
+	Pong = 1;
+	Payload = 2;
+	Complete = 3;
+    Cancel = 4;
+    Downgrade = 5;
+}

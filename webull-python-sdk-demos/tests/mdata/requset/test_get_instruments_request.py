@@ -1,4 +1,3 @@
-# coding=utf-8
 import unittest
 from webullsdkmdata.request.get_instruments_request import GetInstrumentsRequest
 from webullsdkmdata.common.category import Category

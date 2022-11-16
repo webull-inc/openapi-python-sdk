@@ -1,0 +1,86 @@
+syntax = "proto3";
+
+package openapi;
+
+message TickerRequest {
+    string symbols = 1;
+    string category = 2;
+}
+
+message TickerResponse {
+    repeated InstrumentResponse result = 1;
+}
+
+message InstrumentResponse {
+    string name = 1;
+    string symbol = 2;
+    string instrument_id = 3;
+    string exchange_code = 4;
+    string currency = 5;
+}
+
+message BarsRequest {
+    string symbol = 1;
+    string category = 2;
+    string timespan = 3;
+    string count = 4;
+}
+
+message BarsResponse {
+    repeated BarResponse result = 1;
+}
+
+message BarResponse {
+    string time = 1;
+    string open = 2;
+    string close = 3;
+    string high = 4;
+    string low = 5;
+    string volume = 6;
+}
+
+message QuotesRequest {
+    string symbols = 1;
+    string category = 2;
+}
+
+message QuotesResponse {
+    repeated ReferentialResponse result = 1;
+}
+
+message ReferentialResponse {
+    string symbol = 1;
+    string price = 2;
+    string open = 3;
+    string high = 4;
+    string low = 5;
+    string pre_close = 6;
+    string volume = 7;
+    string change = 8;
+    string change_ratio = 9;
+    string ask = 10;
+    string ask_size = 11;
+    string bid = 12;
+    string bid_size = 13;
+    string delta = 14;
+    string gamma = 15;
+    string theta = 16;
+    string vega = 17;
+    string rho = 18;
+    string imp_volt = 19;
+}
+
+message TokenResponse {
+    string token = 1;
+}
+
+message SubscribeRequest {
+    string token = 1;
+    repeated string symbols = 2;
+    string category = 3;
+    repeated string sub_types = 4;
+    string unsubscribe_all = 5;
+}
+
+message SubscribeResponse {
+}

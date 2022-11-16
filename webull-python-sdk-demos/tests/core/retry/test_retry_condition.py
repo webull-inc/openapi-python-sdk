@@ -1,4 +1,3 @@
-# coding=utf-8
 import unittest
 from webullsdkcore.retry.retry_policy_context import RetryPolicyContext
 from webullsdkcore.retry.retry_condition import *
