@@ -25,6 +25,6 @@ request.set_read_timeout(4)
 
 Market subscription is a long connection based on `MQTT v3.1.1`. The default connection timeout is 5 seconds, and the read timeout is 60 seconds (the connection will be maintained through the heartbeat packet within 60 seconds). Currently, there is no method for customizing the timeout configuration.
 
-## Trade Events Subscription
+## Trade Events Subscription / Quotes API
 
 The trading events subscription is based on the long connection of `Server Streaming` implemented by `grpc`. Currently, there is no way to customize the timeout configuration. The timeout is managed by [python's grpc libs](https://grpc.io/docs/languages/python/basics/) by default.

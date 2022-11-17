@@ -20,16 +20,16 @@
 import time
 from webullsdkmdata.common.category import Category
 from webullsdkmdata.common.subscribe_type import SubscribeType
-from webullsdkmdata.quotes.default_client import DefaultQuotesClient
+from webullsdkmdata.quotes.subscribe.default_client import DefaultQuotesClient
 
 if __name__ == '__main__':
     your_app_key = "<your_app_key>"
     your_app_secret = "<your_app_secret>"
     region_id = "hk"
     # not necessary in production env
-    optional_api_endpoint = "<api_endpoint>"
+    optional_quotes_grpc_endpoint = "<grpc_api_endpoint>"
     quotes_client = DefaultQuotesClient(
-        your_app_key, your_app_secret, region_id, api_endpoint=optional_api_endpoint)
+        your_app_key, your_app_secret, region_id, api_endpoint=optional_quotes_grpc_endpoint)
     quotes_client.init_default_settings(["AAPL", "TSLA"], Category.US_STOCK.name, [
                                         SubscribeType.BASIC_QUOTE.name, SubscribeType.SNAPSHOT.name])
     def my_quotes_message_func(client, topic, quotes):

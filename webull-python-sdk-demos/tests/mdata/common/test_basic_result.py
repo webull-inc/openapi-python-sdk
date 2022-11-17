@@ -1,4 +1,3 @@
-# coding=utf-8
 
 import unittest
 from webullsdkmdata.quotes.subscribe.basic_result import BasicResult

@@ -16,7 +16,8 @@ with open("README.rst") as fp:
 
 requires = [
     "jmespath>=0.9.3,<1.0.0",
-    "cryptography>=2.6.0"
+    "cryptography>=2.6.0",
+    "cachetools==5.2.0",
 ]
 
 setup_args = {

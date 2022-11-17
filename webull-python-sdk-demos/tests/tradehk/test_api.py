@@ -35,9 +35,6 @@ class TestApi(unittest.TestCase):
         res = api.instrument.get_trade_instrument_detail("913244615")
         if res.status_code == 200:
             print(res.json())
-        res = api.market_data.get_token()
-        if res.status_code == 200:
-            print(res.json())
         res = api.market_data.get_quote('AAPL','US_STOCK')
         if res.status_code == 200:
             print('us stock quote:', res.json())

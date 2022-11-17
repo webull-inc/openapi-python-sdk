@@ -1,4 +1,3 @@
-# coding=utf-8
 import unittest
 from webullsdkmdata.request.get_historical_bars_request import GetHistoricalBarsRequest
 from webullsdkmdata.common.category import Category

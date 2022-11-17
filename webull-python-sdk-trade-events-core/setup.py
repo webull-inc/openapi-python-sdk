@@ -1,6 +1,11 @@
 import os
 from setuptools import setup, find_packages
 
+# for resolving grpc cython libs installation issue: https://github.com/grpc/grpc/issues/25082
+if hasattr(os,"uname") and os.uname().machine == 'arm64' and os.uname().sysname == 'Darwin':
+    os.system("export GRPC_PYTHON_BUILD_SYSTEM_OPENSSL=1")
+    os.system("export GRPC_PYTHON_BUILD_SYSTEM_ZLIB=1")
+
 PACKAGE = "webullsdktradeeventscore"
 DESCRIPTION = "The trade events core module of Webull Python SDK."
 TOPDIR = os.path.dirname(__file__) or "."
@@ -18,7 +23,7 @@ requires = [
     "grpcio==1.43.0",
     "grpcio-tools==1.43.0",
     "protobuf==3.19.3",
-    "webull-python-sdk-core==0.1.0"
+    "webull-python-sdk-core==0.1.1"
 ]
 
 setup_args = {

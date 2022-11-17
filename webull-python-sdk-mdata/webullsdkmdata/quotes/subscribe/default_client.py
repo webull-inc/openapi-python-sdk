@@ -16,28 +16,28 @@
 # under the License.
 
 # coding=utf-8
-
+from webullsdkmdata.quotes.grpc.pb import quote_pb2
 from webullsdkmdata.quotes.subscribe.basic_quote_decoder import BasicQuoteDecoder
 from webullsdkmdata.quotes.subscribe.payload_type import (PAYLOAD_TYPE_BASIC_QUOTE,
-                                                PAYLOAD_TYPE_SHAPSHOT)
+                                                          PAYLOAD_TYPE_SHAPSHOT)
 from webullsdkmdata.quotes.subscribe.snapshot_decoder import SnapshotDecoder
-from webullsdkmdata.request.get_streaming_token_request import \
-    GetStreamingTokenRequest
-from webullsdkmdata.request.quotes_subscribe_request import SubscribeRequest
+from webullsdkmdata.request.grpc.get_streaming_token_request import GetStreamingTokenRequest
+from webullsdkmdata.request.grpc.quotes_subscribe_request import SubscribeRequest
 from webullsdkquotescore.quotes_client import QuotesClient
 from webullsdkquotescore.quotes_client import LOG_ERR
+from webullsdkmdata.quotes.grpc.response import Response
 
 
 class DefaultQuotesClient(QuotesClient):
-    def __init__(self, app_key, app_secret, region_id, api_endpoint=None, tls_enable=True, transport="tcp", retry_policy=None):
+    def __init__(self, app_key, app_secret, region_id, host=None, tls_enable=True, transport="tcp",
+                 retry_policy=None):
         if region_id:
-            super().__init__(app_key, app_secret, region_id,
-                             tls_enable, transport, retry_policy)
-        else:
-            super().__init__(app_key, app_secret, tls_enable=tls_enable,
+            super().__init__(app_key, app_secret, region_id, host,
+                             tls_enable=tls_enable,
                              transport=transport, retry_policy=retry_policy)
-        if api_endpoint:
-            self._api_endpoint = api_endpoint
+        else:
+            super().__init__(app_key, app_secret, host=host, tls_enable=tls_enable,
+                             transport=transport, retry_policy=retry_policy)
         self._on_subscribe_success = None
 
     @property
@@ -49,28 +49,22 @@ class DefaultQuotesClient(QuotesClient):
         with self._callback_mutex:
             self._on_subscribe_success = func
 
-    def _default_refresh_token_func(self, client, api_client):
+    def _default_refresh_token_func(self, client, grpc_client):
         request = GetStreamingTokenRequest()
-        if client._api_endpoint:
-            request.set_endpoint(client._api_endpoint)
-        response = api_client.get_response(request)
+        result = grpc_client.get_response(request.get_path(), request.serialize())
+        response = Response(result, quote_pb2.TokenResponse())
         return response.json()['token']
 
-    def _default_quotes_subscribe_func(self, client, api_client, token):
-        request = SubscribeRequest()
-        if client._api_endpoint:
-           request.set_endpoint(client._api_endpoint)
-        request.set_token(token)
-        request.set_symbols(self.quotes_symbols)
-        request.set_category(self.quotes_category)
-        request.set_subscribe_types(self.quotes_subtypes)
-        response = api_client.get_response(request)
+    def _default_quotes_subscribe_func(self, client, grpc_client, token):
+        request = SubscribeRequest(token, self.quotes_symbols, self.quotes_category, self.quotes_subtypes)
+        result = grpc_client.get_response(request.get_path(), request.serialize())
+        response = Response(result, quote_pb2.SubscribeResponse())
         if response.status_code == 200:
             with self._callback_mutex:
                 _on_subscribe_success = self._on_subscribe_success
                 if _on_subscribe_success:
                     try:
-                        _on_subscribe_success(client, api_client, token)
+                        _on_subscribe_success(client, grpc_client, token)
                     except Exception as e:
                         self._easy_log(
                             LOG_ERR, 'Caught exception in on_subscribe_success: %s', e)

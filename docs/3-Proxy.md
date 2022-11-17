@@ -37,7 +37,7 @@ quotes_client.proxy_set(proxy_type=socks.SOCKS5, proxy_addr=proxy_host, proxy_po
 ```
 
 
-## Trade Events Subscription
+## Trade Events Subscription / Quotes API
 
 Similar to the HTTP API, and it supports setting the proxy through environment variables.
 1. Set the environment variable grpc_proxy

@@ -23,7 +23,6 @@ import uuid
 
 import paho.mqtt.client as mqttc
 import webullsdkcore.exception.error_code as error_code
-from webullsdkcore.client import ApiClient
 from webullsdkcore.common import api_type
 from webullsdkcore.endpoint.default_endpoint_resolver import \
     DefaultEndpointResolver
@@ -36,6 +35,7 @@ from webullsdkquotescore.default_retry_policy import (DefaultQuotesRetryPolicy,
                                                       QuotesRetryPolicyContext)
 from webullsdkquotescore.exceptions import ConnectException, LoopException
 from webullsdkquotescore.quotes_decoder import QuotesDecoder
+from webullsdkquotescore.grpc.grpc_client import GrpcApiClient
 
 DEFAULT_REGION_ID = "us"
 
@@ -47,7 +47,14 @@ LOG_DEBUG = mqttc.MQTT_LOG_DEBUG
 
 
 class QuotesClient(mqttc.Client):
-    def __init__(self, app_key, app_secret, region_id=DEFAULT_REGION_ID, tls_enable=True, transport="tcp", retry_policy=None):
+    def __init__(self, app_key, app_secret, region_id=DEFAULT_REGION_ID,
+                 host=None,
+                 grpc_port=443,
+                 mqtt_post=8883,
+                 tls_enable=True,
+                 transport="tcp",
+                 retry_policy=None,
+                 downgrade_message=None):
         self._endpoint_resolver = DefaultEndpointResolver(self)
         self._client_id = app_key + "_" + str(uuid.uuid4())
         self._app_key = app_key
@@ -59,9 +66,12 @@ class QuotesClient(mqttc.Client):
         self._quotes_subscribe = None
         self._quotes_unsubscribe = None
         self._on_quotes_message = None
+        self._grpc_port = grpc_port
+        self._mqtt_post = mqtt_post
         self._quotes_decoder = QuotesDecoder()
-        self._api_client = ApiClient(
-            app_key=app_key, app_secret=app_secret, region_id=region_id)
+        self._grpc_client = GrpcApiClient(
+            app_key=app_key, app_secret=app_secret, region_id=region_id, host=host, port=grpc_port,
+            tls_enable=tls_enable, downgrade_message=downgrade_message)
 
         def _quotes_message(client, userdata, message):
             decoded = client._quotes_decoder.decode(message)
@@ -86,7 +96,7 @@ class QuotesClient(mqttc.Client):
                     with self._out_api_message_mutex:
                         try:
                             _quotes_subscribe(
-                                client, self._api_client, self._quotes_token)
+                                client, self._grpc_client, self._quotes_token)
                         except Exception as e:
                             self._easy_log(
                                 LOG_ERR, 'Caught exception in on_quotes_subscribe: %s', e)
@@ -107,6 +117,7 @@ class QuotesClient(mqttc.Client):
             self._retry_policy = retry_policy
         else:
             self._retry_policy = DefaultQuotesRetryPolicy()
+        self._host = host
 
     @property
     def on_refresh_token(self):
@@ -134,6 +145,10 @@ class QuotesClient(mqttc.Client):
     def on_quotes_unsubscribe(self, func):
         with self._callback_mutex:
             self._quotes_unsubscribe = func
+
+    @property
+    def grpc_client(self):
+        return self._grpc_client
 
     @property
     def on_quotes_message(self):
@@ -165,7 +180,7 @@ class QuotesClient(mqttc.Client):
                 error_code.SDK_INVALID_PARAMETER, "on_refresh_token func must be set")
         with self._out_api_message_mutex:
             try:
-                token = refresh_token(self, self._api_client)
+                token = refresh_token(self, self._grpc_client)
                 self._quotes_token = token
                 self.username_pw_set(self._app_key, token)
             except Exception as e:
@@ -182,7 +197,7 @@ class QuotesClient(mqttc.Client):
                 LOG_ERR, 'Caught exception in connect: %s, host: %s, port: %s, ssl: %s', e, _host, port, self._ssl)
             raise e
 
-    def connect_and_loop_forever(self, host=None, port=8883, timeout=1):
+    def connect_and_loop_forever(self, timeout=1):
         retry_policy_context = QuotesRetryPolicyContext(None, 0, None)
         retries = 0
         final_exception = None
@@ -193,7 +208,7 @@ class QuotesClient(mqttc.Client):
                 self._sock_close()
                 return
             try:
-                self._quotes_connect(host, port)
+                self._quotes_connect(self._host, self._mqtt_post)
                 loop_ret = super().loop_forever(timeout)
                 # loop_ret != 0 means unexpected error returned from server, should be retry in future
                 if loop_ret != 0:
@@ -229,19 +244,19 @@ class QuotesClient(mqttc.Client):
         if final_exception:
             raise final_exception
 
-    def connect_and_loop_async(self, host=None, port=8883, timeout=1, thread_daemon=False):
+    def connect_and_loop_async(self, timeout=1, thread_daemon=False):
         if self._thread is not None:
             return mqttc.MQTT_ERR_INVAL
         self._sockpairR, self._sockpairW = mqttc._socketpair_compat()
         self._thread_terminate = False
         self._thread = threading.Thread(
-            target=self.connect_and_loop_forever, name="Thread-Async-Quotes-Client", args=(host, port, timeout))
+            target=self.connect_and_loop_forever, name="Thread-Async-Quotes-Client", args=(timeout,))
         self._thread.daemon = True
         self._thread.daemon = thread_daemon
         self._thread.start()
 
-    def connect_and_loop_start(self, host=None, port=8883, timeout=1):
-        self.connect_and_loop_async(host, port, timeout, True)
+    def connect_and_loop_start(self, timeout=1):
+        self.connect_and_loop_async(timeout, True)
 
     def loop_wait(self):
         if self._thread is None:
