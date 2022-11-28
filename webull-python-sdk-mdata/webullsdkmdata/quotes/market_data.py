@@ -16,7 +16,7 @@
 # under the License.
 
 from webullsdkmdata.request.get_historical_bars_request import GetHistoricalBarsRequest
-from webullsdkmdata.request.get_quote_request import GetQuoteRequest
+from webullsdkmdata.request.get_snapshot_request import GetSnapshotRequest
 
 
 class MarketData:
@@ -32,8 +32,8 @@ class MarketData:
         response = self.client.get_response(history_bar_request)
         return response
 
-    def get_quote(self, symbols, category):
-        quote_request = GetQuoteRequest()
+    def get_snapshot(self, symbols, category):
+        quote_request = GetSnapshotRequest()
         quote_request.set_symbols(symbols)
         quote_request.set_category(category)
         response = self.client.get_response(quote_request)

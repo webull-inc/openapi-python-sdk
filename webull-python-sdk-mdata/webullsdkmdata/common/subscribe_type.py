@@ -17,6 +17,9 @@
 
 # coding=utf-8
 from webullsdkcore.common.easy_enum import EasyEnum
+
+
 class SubscribeType(EasyEnum):
-    BASIC_QUOTE = (1, "BASIC QUOTE")
-    SNAPSHOT = (2, "SNAPSHOT")
+    QUOTE = (0, "QUOTE")
+    SNAPSHOT = (1, "SNAPSHOT")
+    TICK = (2, "TICK")

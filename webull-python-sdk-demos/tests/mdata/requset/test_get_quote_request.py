@@ -1,13 +1,13 @@
 # coding=utf-8
 import unittest
-from webullsdkmdata.request.get_quote_request import GetQuoteRequest
+from webullsdkmdata.request.get_snapshot_request import GetSnapshotRequest
 from webullsdkmdata.common.category import Category
 from webullsdkcore.client import ApiClient
 
 PRE_OPENAPI_ENDPOINT = "<api_endpoint>"
 class TestGetQuoteRequest(unittest.TestCase):
     def test_request(self):
-        reuqest = GetQuoteRequest()
+        reuqest = GetSnapshotRequest()
         reuqest.set_category(Category.US_STOCK.name)
         reuqest.set_symbols(["AAPL", "TSLA"])
         reuqest.set_endpoint(PRE_OPENAPI_ENDPOINT)

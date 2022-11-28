@@ -18,7 +18,7 @@
 # coding=utf-8
 from webullsdkcore.client import ApiClient
 from webullsdkmdata.common.category import Category
-from webullsdkmdata.request.get_quote_request import GetQuoteRequest
+from webullsdkmdata.request.get_snapshot_request import GetSnapshotRequest
 
 if __name__ == '__main__':
     your_app_key = "<your_app_key>"
@@ -26,7 +26,7 @@ if __name__ == '__main__':
     region_id = "hk"
     optional_api_endpoint = "<api_endpoint>"
     api_client = ApiClient(your_app_key, your_app_secret, region_id)
-    request = GetQuoteRequest()
+    request = GetSnapshotRequest()
     request.set_endpoint(optional_api_endpoint)
     request.set_category(Category.US_STOCK.name)
     request.set_symbols("AAPL")

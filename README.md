@@ -33,7 +33,7 @@ https://developer.webull.hk/api-doc/
 
 ## Documentation
 
-- [Requirements](./docs/0-Requirement_CN.md)
+- [Requirements](./docs/0-Requirement.md)
 - [SDK installation](./docs/1-Installation.md)
 - [Timeout mechanism](./docs/2-Timeout.md)
 - [Proxy configuration](./docs/3-Proxy.md)

@@ -6,9 +6,11 @@ from webullsdkmdata.common.category import Category
 from webullsdkmdata.common.subscribe_type import SubscribeType
 from webullsdkmdata.quotes.grpc.pb import quote_pb2
 from webullsdkmdata.quotes.grpc.response import Response
-from webullsdkmdata.quotes.subscribe.basic_quote_decoder import BasicQuoteDecoder
-from webullsdkmdata.quotes.subscribe.payload_type import PAYLOAD_TYPE_SHAPSHOT, PAYLOAD_TYPE_BASIC_QUOTE
 from webullsdkmdata.quotes.subscribe.snapshot_decoder import SnapshotDecoder
+from webullsdkmdata.quotes.subscribe.tick_decoder import TickDecoder
+from webullsdkmdata.quotes.subscribe.quote_decoder import QuoteDecoder
+from webullsdkmdata.quotes.subscribe.payload_type import (PAYLOAD_TYPE_QUOTE,
+                                                          PAYLOAD_TYPE_SHAPSHOT, PAYLOAD_TYPE_TICK)
 from webullsdkmdata.request.grpc.get_streaming_token_request import GetStreamingTokenRequest
 from webullsdkmdata.request.grpc.quotes_subscribe_request import SubscribeRequest
 from webullsdkmdata.request.grpc.quotes_unsubscribe_request import UnsubcribeRequest
@@ -26,8 +28,9 @@ class CustomClient:
         self._host = host
         self.subscribe_client = QuotesClient(app_key, app_secret, region_id, host)
         self.subscribe_client.register_payload_decoder(
-            PAYLOAD_TYPE_BASIC_QUOTE, BasicQuoteDecoder())
+            PAYLOAD_TYPE_QUOTE, QuoteDecoder())
         self.subscribe_client.register_payload_decoder(PAYLOAD_TYPE_SHAPSHOT, SnapshotDecoder())
+        self.subscribe_client.register_payload_decoder(PAYLOAD_TYPE_TICK, TickDecoder())
         self._grpc_client = self.subscribe_client.grpc_client
 
     def _on_quotes_subscribe(self, client, api_client, token):
@@ -84,8 +87,8 @@ if __name__ == '__main__':
 
     try:
         # subscribe
-        res = custom_client.subscribe(['00700'], Category.HK_STOCK.name,
-                                      [SubscribeType.BASIC_QUOTE.name, SubscribeType.SNAPSHOT.name])
+        res = custom_client.subscribe(['AAPL'], Category.US_STOCK.name,
+                                      [SubscribeType.QUOTE.name, SubscribeType.SNAPSHOT.name, SubscribeType.TICK.name])
         print(res.path)
         print(res.request_id)
         print(res.status_code)
@@ -97,9 +100,9 @@ if __name__ == '__main__':
     time.sleep(30)
 
     print("unsubscribe")
-    res = custom_client.unsubscribe(symbols=None, category=Category.HK_STOCK.name,
-                                    sub_types=[SubscribeType.BASIC_QUOTE.name, SubscribeType.SNAPSHOT.name],
-                                    unsubscribe_all=True)
+    res = custom_client.unsubscribe(symbols=['AAPL'], category=Category.US_STOCK.name,
+                                    sub_types=[SubscribeType.QUOTE.name],
+                                    unsubscribe_all=False)
 
     print(res.path)
     print(res.request_id)

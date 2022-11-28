@@ -16,29 +16,17 @@
 # under the License.
 
 # coding=utf-8
-from datetime import datetime
+
+from webullsdkmdata.quotes.subscribe.quote_result import QuoteResult
+from webullsdkmdata.quotes.subscribe.message_pb2 import Quote
+from webullsdkquotescore.quotes_payload_decoder import BaseQuotesPayloadDecoder
 
 
-class BasicResult:
-    def __init__(self, pb_basic):
-        self.symbol = pb_basic.symbol
-        self.instrument_id = pb_basic.instrument_id
-        self.timestamp = int(pb_basic.timestamp)
+class QuoteDecoder(BaseQuotesPayloadDecoder):
+    def __init__(self):
+        super().__init__()
 
-    def get_symbol(self):
-        return self.symbol
-
-    def get_instrument_id(self):
-        return self.instrument_id
-
-    def get_timestmap(self):
-        return self.timestamp
-
-    def get_timestamp_as_utc(self):
-        return datetime.utcfromtimestamp(self.timestamp / 1000.0)
-
-    def __repr__(self):
-        return "symbol:%s,instrument_id:%s,timestamp:%d" % (self.symbol, self.instrument_id, self.timestamp)
-
-    def __str__(self):
-        return self.__repr__()
+    def parse(self, payload):
+        quote = Quote()
+        quote.ParseFromString(payload)
+        return QuoteResult(quote)

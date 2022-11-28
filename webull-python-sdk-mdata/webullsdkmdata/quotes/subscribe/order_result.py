@@ -15,18 +15,19 @@
 # specific language governing permissions and limitations
 # under the License.
 
-# coding=utf-8
+class Order:
+    def __init__(self, order):
+        self.mpid = order.mpid
+        self.size = order.size
 
-from webullsdkmdata.quotes.subscribe.basic_quote_result import BasicQuoteResult
-from webullsdkmdata.quotes.subscribe.message_pb2 import QuoteData
-from webullsdkquotescore.quotes_payload_decoder import BaseQuotesPayloadDecoder
+    def get_mpid(self):
+        return self.mpid
 
+    def get_size(self):
+        return self.size
 
-class BasicQuoteDecoder(BaseQuotesPayloadDecoder):
-    def __init__(self):
-        super().__init__()
+    def __repr__(self):
+        return "mpid:%s,size:%s" % (self.mpid, self.size)
 
-    def parse(self, payload):
-        quote = QuoteData()
-        quote.ParseFromString(payload)
-        return BasicQuoteResult(quote)
+    def __str__(self):
+        return self.__repr__()

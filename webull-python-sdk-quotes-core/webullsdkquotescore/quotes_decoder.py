@@ -50,6 +50,6 @@ class QuotesDecoder:
         if not topic:
             return None
         segments = topic.split("-")
-        if len(segments) != 3:
+        if len(segments) <= 3:
             return None
         return QuotesTopic(segments[0], segments[1], segments[2])

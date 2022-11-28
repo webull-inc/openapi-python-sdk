@@ -17,10 +17,11 @@
 
 # coding=utf-8
 from webullsdkmdata.quotes.grpc.pb import quote_pb2
-from webullsdkmdata.quotes.subscribe.basic_quote_decoder import BasicQuoteDecoder
-from webullsdkmdata.quotes.subscribe.payload_type import (PAYLOAD_TYPE_BASIC_QUOTE,
-                                                          PAYLOAD_TYPE_SHAPSHOT)
+from webullsdkmdata.quotes.subscribe.quote_decoder import QuoteDecoder
+from webullsdkmdata.quotes.subscribe.payload_type import (PAYLOAD_TYPE_QUOTE,
+                                                          PAYLOAD_TYPE_SHAPSHOT,PAYLOAD_TYPE_TICK)
 from webullsdkmdata.quotes.subscribe.snapshot_decoder import SnapshotDecoder
+from webullsdkmdata.quotes.subscribe.tick_decoder import TickDecoder
 from webullsdkmdata.request.grpc.get_streaming_token_request import GetStreamingTokenRequest
 from webullsdkmdata.request.grpc.quotes_subscribe_request import SubscribeRequest
 from webullsdkquotescore.quotes_client import QuotesClient
@@ -73,9 +74,9 @@ class DefaultQuotesClient(QuotesClient):
     def init_default_settings(self, symbols, category, sub_types):
         self.on_refresh_token = self._default_refresh_token_func
         self.on_quotes_subscribe = self._default_quotes_subscribe_func
-        self.register_payload_decoder(
-            PAYLOAD_TYPE_BASIC_QUOTE, BasicQuoteDecoder())
+        self.register_payload_decoder(PAYLOAD_TYPE_QUOTE, QuoteDecoder())
         self.register_payload_decoder(PAYLOAD_TYPE_SHAPSHOT, SnapshotDecoder())
+        self.register_payload_decoder(PAYLOAD_TYPE_TICK, TickDecoder())
         self.quotes_symbols = symbols
         self.quotes_category = category
         self.quotes_subtypes = sub_types

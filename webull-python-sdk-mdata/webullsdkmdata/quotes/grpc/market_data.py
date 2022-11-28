@@ -14,15 +14,16 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-import logging
 
 from webullsdkmdata.quotes.grpc.pb import quote_pb2
 from webullsdkmdata.quotes.grpc.response import Response
 from webullsdkmdata.request.grpc.get_historical_bars_request import GetHistoricalBarsRequest
 from webullsdkmdata.request.grpc.get_quote_request import GetQuoteRequest
+from webullsdkmdata.request.grpc.get_snapshot_request import GetSnapshotRequest
 from webullsdkmdata.request.grpc.get_streaming_token_request import GetStreamingTokenRequest
 from webullsdkmdata.request.grpc.quotes_subscribe_request import SubscribeRequest
 from webullsdkmdata.request.grpc.quotes_unsubscribe_request import UnsubcribeRequest
+from webullsdkmdata.request.grpc.get_tick_request import GetTickRequest
 
 
 class MarketData:
@@ -49,7 +50,17 @@ class MarketData:
         result = self.client.get_response(request.get_path(), request.serialize())
         return Response(result, quote_pb2.BarsResponse())
 
-    def get_quote(self, symbols, category):
-        request = GetQuoteRequest(symbols, category)
+    def get_quote(self, symbol, category):
+        request = GetQuoteRequest(symbol, category)
         result = self.client.get_response(request.get_path(), request.serialize())
-        return Response(result, quote_pb2.QuotesResponse())
+        return Response(result, quote_pb2.QuoteResponse())
+
+    def get_snapshot(self, symbols, category):
+        request = GetSnapshotRequest(symbols, category)
+        result = self.client.get_response(request.get_path(), request.serialize())
+        return Response(result, quote_pb2.SnapshotResponse())
+
+    def get_tick(self, symbol, category, count='30'):
+        request = GetTickRequest(symbol, category, count)
+        result = self.client.get_response(request.get_path(), request.serialize())
+        return Response(result, quote_pb2.TickResponse())

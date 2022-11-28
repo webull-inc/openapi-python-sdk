@@ -15,42 +15,36 @@
 # specific language governing permissions and limitations
 # under the License.
 
-# coding=utf-8
-
 from decimal import Decimal
 from webullsdkmdata.quotes.subscribe.basic_result import BasicResult
 
 
-class BasicQuoteResult:
-    def __init__(self, pb_quote):
-        self.basic = BasicResult(pb_quote.basic)
-        self.ask_size = Decimal(
-            pb_quote.ask_size) if pb_quote.ask_size else None
-        self.ask_price = Decimal(
-            pb_quote.ask_price) if pb_quote.ask_price else None
-        self.bid_size = Decimal(
-            pb_quote.bid_size) if pb_quote.bid_size else None
-        self.bid_price = Decimal(
-            pb_quote.bid_price) if pb_quote.bid_price else None
+class TickResult:
+    def __init__(self, pb_tick):
+        self.basic = BasicResult(pb_tick.basic)
+        self.time = pb_tick.time
+        self.price = Decimal(pb_tick.price) if pb_tick.price else None
+        self.volume = pb_tick.volume if pb_tick.volume else None
+        self.side = pb_tick.side if pb_tick.side else None
 
     def get_basic(self):
         return self.basic
 
-    def get_ask_size(self):
-        return self.ask_size
+    def get_price(self):
+        return self.price
 
-    def get_ask_price(self):
-        return self.ask_price
+    def get_volume(self):
+        return self.volume
 
-    def get_bid_size(self):
-        return self.bid_size
+    def get_time(self):
+        return self.time
 
-    def get_bid_price(self):
-        return self.bid_price
+    def get_side(self):
+        return self.side
 
     def __repr__(self):
-        return "%s, ask_size:%s, ask_price:%s, bid_size:%s, bid_price:%s" \
-            % (self.basic, self.ask_size, self.ask_price, self.bid_size, self.bid_price)
+        return "%s, price:%s, volume:%s, time:%s, side:%s" \
+               % (self.basic, self.price, self.volume, self.time, self.side)
 
     def __str__(self):
         return self.__repr__()

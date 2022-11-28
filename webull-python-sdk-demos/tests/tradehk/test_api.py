@@ -5,13 +5,12 @@ from webullsdkcore.client import ApiClient
 from webullsdkmdata.common.category import Category
 from webullsdktradehk.api import API
 
-
 optional_api_endpoint = "<api_endpoint>"
 your_app_key = "<your_app_key>"
 your_app_secret = "<your_app_secret>"
 account_id = "<your_account_id>"
-api_client = ApiClient(your_app_key, your_app_secret,'hk')
-api_client.add_endpoint('us', optional_api_endpoint)
+api_client = ApiClient(your_app_key, your_app_secret, 'hk')
+api_client.add_endpoint('hk', optional_api_endpoint)
 
 
 class TestApi(unittest.TestCase):
@@ -35,13 +34,13 @@ class TestApi(unittest.TestCase):
         res = api.instrument.get_trade_instrument_detail("913244615")
         if res.status_code == 200:
             print(res.json())
-        res = api.market_data.get_quote('AAPL','US_STOCK')
+        res = api.market_data.get_snapshot('AAPL', 'US_STOCK')
         if res.status_code == 200:
             print('us stock quote:', res.json())
-        res = api.market_data.get_quote('00700', 'HK_STOCK')
+        res = api.market_data.get_snapshot('00700', 'HK_STOCK')
         if res.status_code == 200:
             print('hk stock quote:', res.json())
-        res = api.market_data.get_quote('600000', 'CN_STOCK')
+        res = api.market_data.get_snapshot('600000', 'CN_STOCK')
         if res.status_code == 200:
             print('cn stock quote:', res.json())
         res = api.market_data.get_history_bar('AAPL', 'US_STOCK', 'M1')
@@ -62,11 +61,11 @@ class TestApi(unittest.TestCase):
         res = api.account.get_account_position(account_id)
         if res.status_code == 200:
             print('account position:', res.json())
-        res = api.account.get_account_balance(account_id,'HKD')
+        res = api.account.get_account_balance(account_id, 'HKD')
         if res.status_code == 200:
             print('account balance:', res.json())
         client_order_id = uuid.uuid4().hex
-        print('client order id:',client_order_id)
+        print('client order id:', client_order_id)
         stock_order = {
             "account_id": account_id,
             "stock_order": {
@@ -155,15 +154,12 @@ class TestApi(unittest.TestCase):
         res = api.order.list_open_orders(account_id, page_size=20)
         if res.status_code == 200:
             print('open orders:', res.json())
-        res = api.order.list_today_orders(account_id,page_size=20)
+        res = api.order.list_today_orders(account_id, page_size=20)
         if res.status_code == 200:
             print('today orders', res.json())
         res = api.order.query_order_detail(account_id, client_order_id)
         if res.status_code == 200:
-            print('order detail:',res.json())
+            print('order detail:', res.json())
         res = api.order.cancel_order(account_id, client_order_id)
         if res.status_code == 200:
             print('cancel order status:', res.json())
-
-
-
