@@ -19,13 +19,13 @@ Subscription to real-time information: Subscribe to order status changes, market
 
 ## Interface Protocol
 
-The bottom layer of Webull OpenAPI provides three protocols, HTTP / GRPC / MQTT, to support functions and features like trading, subcriptions for changes of order status and real-time market quotes.
+The bottom layer of Webull OpenAPI provides three protocols, HTTP / GRPC / MQTT, to support functions and features like trading, subscriptions for changes of order status and real-time market quotes.
 
-HTTP: It mainly provides interface services for data such as tradings, accounts, candlestick charts, snapshots, etc.
-
-GRPC: Currently provides real-time messages for order status changes.
-
-MQTT: Provides data services for real-time market conditions.
+| Protocol    | Description                                       |
+|-------|------------------------------------------|
+| HTTP  | It mainly provides interface services for data such as tradings, accounts, candlestick charts, snapshots, etc.              |
+| GRPC	 | 1. Provide real-time push messages for order status changes.<br/>2. Provide data query support for the market interface. |
+| MQTT	 | Provides data services for real-time market conditions.  |
 
 ## Developer documentation
 
