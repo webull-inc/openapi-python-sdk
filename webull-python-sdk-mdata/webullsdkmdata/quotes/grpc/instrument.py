@@ -14,11 +14,11 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-import logging
 
 from webullsdkmdata.quotes.grpc.pb import quote_pb2
 from webullsdkmdata.quotes.grpc.response import Response
 from webullsdkmdata.request.grpc.get_instruments_request import GetInstrumentsRequest
+
 
 class Instrument:
     def __init__(self, grpc_client):
@@ -27,4 +27,4 @@ class Instrument:
     def get_instrument(self, symbols, category):
         request = GetInstrumentsRequest(symbols, category)
         result = self.client.get_response(request.get_path(), request.serialize())
-        return Response(result, quote_pb2.TickerResponse())
+        return Response(result, quote_pb2.InstrumentResponse())

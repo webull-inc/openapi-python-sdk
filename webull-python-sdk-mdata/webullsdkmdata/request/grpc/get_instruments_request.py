@@ -22,7 +22,7 @@ from webullsdkmdata.request.grpc.base_request import GRPCBaseRequest
 
 class GetInstrumentsRequest(GRPCBaseRequest):
     def __init__(self, symbols, category):
-        request = quote_pb2.TickerRequest(
+        request = quote_pb2.InstrumentRequest(
             symbols=",".join(symbols) if isinstance(symbols, list) else symbols,
             category=category
         )

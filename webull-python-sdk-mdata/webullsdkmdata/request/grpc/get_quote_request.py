@@ -22,10 +22,10 @@ from webullsdkmdata.request.grpc.base_request import GRPCBaseRequest
 
 
 class GetQuoteRequest(GRPCBaseRequest):
-    
-    def __init__(self, symbols, category):
-        request = quote_pb2.QuotesRequest(
-            symbols=",".join(symbols) if isinstance(symbols, list) else symbols,
+
+    def __init__(self, symbol, category):
+        request = quote_pb2.QuoteRequest(
+            symbol=symbol,
             category=category
         )
         GRPCBaseRequest.__init__(self, "/market-data/quotes", request, version='v1')

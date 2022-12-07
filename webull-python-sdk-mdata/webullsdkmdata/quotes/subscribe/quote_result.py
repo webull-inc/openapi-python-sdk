@@ -16,29 +16,35 @@
 # under the License.
 
 # coding=utf-8
-from datetime import datetime
+
+from decimal import Decimal
+from webullsdkmdata.quotes.subscribe.basic_result import BasicResult
+from webullsdkmdata.quotes.subscribe.ask_bid_result import AskBidResult
 
 
-class BasicResult:
-    def __init__(self, pb_basic):
-        self.symbol = pb_basic.symbol
-        self.instrument_id = pb_basic.instrument_id
-        self.timestamp = int(pb_basic.timestamp)
+class QuoteResult:
+    def __init__(self, pb_quote):
+        self.basic = BasicResult(pb_quote.basic)
+        self.asks = []
+        if pb_quote.asks:
+            for ask in pb_quote.asks:
+                self.asks.append(AskBidResult(ask))
+        self.bids = []
+        if pb_quote.bids:
+            for bid in pb_quote.bids:
+                self.bids.append(AskBidResult(bid))
 
-    def get_symbol(self):
-        return self.symbol
+    def get_basic(self):
+        return self.basic
 
-    def get_instrument_id(self):
-        return self.instrument_id
+    def get_asks(self):
+        return self.asks
 
-    def get_timestmap(self):
-        return self.timestamp
-
-    def get_timestamp_as_utc(self):
-        return datetime.utcfromtimestamp(self.timestamp / 1000.0)
+    def get_bids(self):
+        return self.bids
 
     def __repr__(self):
-        return "symbol:%s,instrument_id:%s,timestamp:%d" % (self.symbol, self.instrument_id, self.timestamp)
+        return "basic: %s,asks: %s,bids:%s" % (self.basic, self.asks, self.bids)
 
     def __str__(self):
         return self.__repr__()

@@ -15,19 +15,15 @@
 # specific language governing permissions and limitations
 # under the License.
 
-# coding=utf-8
+from webullsdkmdata.quotes.grpc.pb import quote_pb2
+from webullsdkmdata.request.grpc.base_request import GRPCBaseRequest
 
-from webullsdkcore.request import ApiRequest
 
-class GetQuoteRequest(ApiRequest):
-    def __init__(self):
-        ApiRequest.__init__(self, "/market-data/quotes", version='v1', method="GET", query_params={})
+class GetSnapshotRequest(GRPCBaseRequest):
 
-    def set_symbols(self, symbols):
-        if isinstance(symbols, str):
-            self.add_query_param("symbols", symbols)
-        elif isinstance(symbols, list):
-            self.add_query_param("symbols", ",".join(symbols))
-    
-    def set_category(self, category):
-        self.add_query_param("category", category)
+    def __init__(self, symbols, category):
+        request = quote_pb2.SnapshotRequest(
+            symbols=",".join(symbols) if isinstance(symbols, list) else symbols,
+            category=category
+        )
+        GRPCBaseRequest.__init__(self, "/market-data/snapshot", request, version='v1')

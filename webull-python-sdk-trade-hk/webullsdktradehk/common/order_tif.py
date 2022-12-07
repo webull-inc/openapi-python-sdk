@@ -20,7 +20,7 @@ from webullsdkcore.common.easy_enum import EasyEnum
 
 class OrderTIF(EasyEnum):
     DAY = (1, "order day")
-    GTC = (2, "until the user cancels")
+    GTC = (2, "GTC order")
     IOC = (3, "deal or cancel right now")
 
 

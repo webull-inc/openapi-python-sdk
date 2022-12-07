@@ -15,12 +15,11 @@ class TestDefaultQuotesClient(unittest.TestCase):
         def pt_logs(client, userdata, level, buf):
             print("userdata:%s, level:%s, buf:%s" % (userdata, level, buf))
 
-        def on_message(client, userdata, message):
-            print("Received message '" + str(message.payload) + "' on topic '"
-                  + message.topic + "' with QoS " + str(message.qos))
+        def on_quotes_message(client, userdata, message):
+            print("Received message userdata: %s,%s'" % (userdata, message))
 
         client = DefaultQuotesClient(your_app_key, your_app_secret, 'hk', optional_quotes_endpoint)
-        client.init_default_settings('00700,09988', Category.HK_STOCK.name, SubscribeType.SNAPSHOT.name)
-        client.on_log = pt_logs
-        client.on_message = on_message
+        client.init_default_settings('AAPL', Category.US_STOCK.name, SubscribeType.SNAPSHOT.name)
+        # client.on_log = pt_logs
+        client.on_quotes_message = on_quotes_message
         client.connect_and_loop_forever()

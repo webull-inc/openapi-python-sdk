@@ -15,30 +15,16 @@
 # specific language governing permissions and limitations
 # under the License.
 
-# coding=utf-8
-from datetime import datetime
+from webullsdkmdata.quotes.grpc.pb import quote_pb2
+from webullsdkmdata.request.grpc.base_request import GRPCBaseRequest
 
 
-class BasicResult:
-    def __init__(self, pb_basic):
-        self.symbol = pb_basic.symbol
-        self.instrument_id = pb_basic.instrument_id
-        self.timestamp = int(pb_basic.timestamp)
+class GetTickRequest(GRPCBaseRequest):
 
-    def get_symbol(self):
-        return self.symbol
-
-    def get_instrument_id(self):
-        return self.instrument_id
-
-    def get_timestmap(self):
-        return self.timestamp
-
-    def get_timestamp_as_utc(self):
-        return datetime.utcfromtimestamp(self.timestamp / 1000.0)
-
-    def __repr__(self):
-        return "symbol:%s,instrument_id:%s,timestamp:%d" % (self.symbol, self.instrument_id, self.timestamp)
-
-    def __str__(self):
-        return self.__repr__()
+    def __init__(self, symbol, category, count='30'):
+        request = quote_pb2.TickRequest(
+            symbol=symbol,
+            category=category,
+            count=count
+        )
+        GRPCBaseRequest.__init__(self, "/market-data/tick", request, version='v1')

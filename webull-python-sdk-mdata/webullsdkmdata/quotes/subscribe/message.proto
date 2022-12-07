@@ -1,31 +1,51 @@
 syntax = "proto3";
 
-message BasicData {
-    string symbol = 1;
-    string instrument_id = 2;
-    string timestamp = 3;
+message Basic {
+  string symbol = 1;
+  string instrument_id = 2;
+  string timestamp = 3;
 }
 
-message QuoteData {
-    BasicData basic = 1;      // 基础数据
-    string ask_size = 2;      // 卖一档数量
-    string ask_price = 3;     // 卖一价格
-    string bid_size = 4;      // 买一档数量
-    string bid_price = 5;     // 买一价格
+message Snapshot {
+  Basic basic = 1;
+  string trade_time = 2;
+  string price = 3;
+  string open = 4;
+  string high = 5;
+  string low = 6;
+  string pre_close = 7;
+  string volume = 8;
+  string change = 9;
+  string change_ratio = 10;
 }
 
-message SnapshotData{
-    BasicData basic = 1;      // 基础数据
-    string open = 2;          // 开盘价
-    string high = 3;          // 今日最高
-    string low = 4;           // 今日最低
-    string price = 5;         // 当前价格
-    string pre_close = 6;     // 昨日收盘价
-    string volume = 7;        // 成交量
-    string change = 8;        // 涨跌幅
-    string change_ratio = 9;  // 成交额
-    string ask_size = 10;     // 卖一档数量
-    string ask_price = 11;    // 卖一价格
-    string bid_size = 12;     // 买一档数量
-    string bid_price = 13;    // 买一价格
+message Quote {
+  Basic basic = 1;
+  repeated AskBid asks = 2;
+  repeated AskBid bids = 3;
+}
+
+message Tick {
+  Basic basic = 1;
+  string time = 2;
+  string price = 3;
+  string volume = 4;
+  string side = 5;
+}
+
+message AskBid {
+  string price = 1;
+  string size = 2;
+  repeated Order order = 3;
+  repeated Broker broker = 4;
+}
+
+message Order {
+  string mpid = 1;
+  string size = 2;
+}
+
+message Broker {
+  string bid = 1;
+  string name = 2;
 }

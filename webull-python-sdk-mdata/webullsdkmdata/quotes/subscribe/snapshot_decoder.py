@@ -18,7 +18,7 @@
 # coding=utf-8
 
 from webullsdkquotescore.quotes_payload_decoder import BaseQuotesPayloadDecoder
-from webullsdkmdata.quotes.subscribe.message_pb2 import SnapshotData
+from webullsdkmdata.quotes.subscribe.message_pb2 import Snapshot
 from webullsdkmdata.quotes.subscribe.snapshot_result import SnapshotResult
 
 
@@ -27,6 +27,6 @@ class SnapshotDecoder(BaseQuotesPayloadDecoder):
         super().__init__()
 
     def parse(self, payload):
-        snapshot = SnapshotData()
+        snapshot = Snapshot()
         snapshot.ParseFromString(payload)
         return SnapshotResult(snapshot)

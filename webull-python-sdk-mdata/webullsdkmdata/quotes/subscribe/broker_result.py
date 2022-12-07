@@ -15,30 +15,22 @@
 # specific language governing permissions and limitations
 # under the License.
 
-# coding=utf-8
-from datetime import datetime
+from decimal import Decimal
 
 
-class BasicResult:
-    def __init__(self, pb_basic):
-        self.symbol = pb_basic.symbol
-        self.instrument_id = pb_basic.instrument_id
-        self.timestamp = int(pb_basic.timestamp)
+class Broker:
+    def __init__(self, pb_broker):
+        self.bid = Decimal(pb_broker.bid) if pb_broker.bid else None
+        self.name = pb_broker.name if pb_broker.name else None
 
-    def get_symbol(self):
-        return self.symbol
+    def get_bid(self):
+        return self.bid
 
-    def get_instrument_id(self):
-        return self.instrument_id
-
-    def get_timestmap(self):
-        return self.timestamp
-
-    def get_timestamp_as_utc(self):
-        return datetime.utcfromtimestamp(self.timestamp / 1000.0)
+    def get_name(self):
+        return self.name
 
     def __repr__(self):
-        return "symbol:%s,instrument_id:%s,timestamp:%d" % (self.symbol, self.instrument_id, self.timestamp)
+        return "name:%s,bid:%s" % (self.name, self.bid)
 
     def __str__(self):
         return self.__repr__()

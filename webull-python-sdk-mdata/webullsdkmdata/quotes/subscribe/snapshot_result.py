@@ -36,14 +36,6 @@ class SnapshotResult:
             pb_snapshot.change) if pb_snapshot.change else None
         self.change_ratio = Decimal(
             pb_snapshot.change_ratio) if pb_snapshot.change_ratio else None
-        self.ask_size = Decimal(
-            pb_snapshot.ask_size) if pb_snapshot.ask_size else None
-        self.ask_price = Decimal(
-            pb_snapshot.ask_price) if pb_snapshot.ask_price else None
-        self.bid_size = Decimal(
-            pb_snapshot.bid_size) if pb_snapshot.bid_size else None
-        self.bid_price = Decimal(
-            pb_snapshot.bid_price) if pb_snapshot.bid_price else None
 
     def get_basic(self):
         return self.basic
@@ -72,21 +64,9 @@ class SnapshotResult:
     def get_change_ratio(self):
         return self.change_ratio
 
-    def get_ask_size(self):
-        return self.ask_size
-
-    def get_ask_price(self):
-        return self.ask_price
-
-    def get_bid_size(self):
-        return self.bid_size
-
-    def get_bid_price(self):
-        return self.bid_price
-
     def __repr__(self):
-        return "%s, open:%s, high:%s, low:%s, price:%s, pre_close:%s, volume:%s, change:%s, change_ratio:%s, ask_size:%s, ask_price:%s, bid_size:%s, bid_price:%s" \
-            % (self.basic, self.open, self.high, self.low, self.price, self.pre_close, self.volume, self.change, self.change_ratio, self.ask_size, self.ask_price, self.bid_size, self.bid_price)
+        return "%s, open:%s, high:%s, low:%s, price:%s, pre_close:%s, volume:%s, change:%s, change_ratio:%s" \
+            % (self.basic, self.open, self.high, self.low, self.price, self.pre_close, self.volume, self.change, self.change_ratio)
 
     def __str__(self):
         return self.__repr__()
