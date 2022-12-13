@@ -1,19 +1,16 @@
-# Licensed to the Apache Software Foundation (ASF) under one
-# or more contributor license agreements.  See the NOTICE file
-# distributed with this work for additional information
-# regarding copyright ownership.  The ASF licenses this file
-# to you under the Apache License, Version 2.0 (the
-# "License"); you may not use this file except in compliance
-# with the License.  You may obtain a copy of the License at
+# Copyright 2022 Webull
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-# Unless required by applicable law or agreed to in writing,
-# software distributed under the License is distributed on an
-# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-# KIND, either express or implied.  See the License for the
-# specific language governing permissions and limitations
-# under the License.
+# 	http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 # coding=utf-8
 
@@ -25,15 +22,20 @@ from webullsdkmdata.quotes.subscribe.default_client import DefaultQuotesClient
 if __name__ == '__main__':
     your_app_key = "<your_app_key>"
     your_app_secret = "<your_app_secret>"
-    region_id = "hk"
+    # 'hk' or 'us'
+    region_id = '<region_id>'
     # not necessary in production env
     optional_quotes_grpc_endpoint = "<grpc_api_endpoint>"
     quotes_client = DefaultQuotesClient(
         your_app_key, your_app_secret, region_id, api_endpoint=optional_quotes_grpc_endpoint)
     quotes_client.init_default_settings(["AAPL", "TSLA"], Category.US_STOCK.name, [
-                                        SubscribeType.BASIC_QUOTE.name, SubscribeType.SNAPSHOT.name])
+        SubscribeType.BASIC_QUOTE.name, SubscribeType.SNAPSHOT.name])
+
+
     def my_quotes_message_func(client, topic, quotes):
         print("topic:%s, quotes:%s" % (topic, quotes))
+
+
     # set quotes receiving callback func
     quotes_client.on_quotes_message = my_quotes_message_func
     # not necessary in production env

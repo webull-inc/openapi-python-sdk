@@ -14,7 +14,13 @@ Subscription to real-time information: Subscribe to order status changes, market
 
 ## Requirements
 
-- Please first generate the app key and app secret on the [Webull Hong Kong official website](https://www.webull.hk).
+- Please first generate the app key and app secret on the Webull official website.
+
+| Market | Link                   |
+|--------|------------------------|
+| HK     | https://www.webull.hk  |
+| US     | https://www.webull.com |
+
 - Requires Python 3.7 and above.
 
 ## Interface Protocol
@@ -29,15 +35,7 @@ The bottom layer of Webull OpenAPI provides three protocols, HTTP / GRPC / MQTT,
 
 ## Developer documentation
 
-https://developer.webull.hk/api-doc/
-
-## Documentation
-
-- [Requirements](./docs/0-Requirement.md)
-- [SDK installation](./docs/1-Installation.md)
-- [Timeout mechanism](./docs/2-Timeout.md)
-- [Proxy configuration](./docs/3-Proxy.md)
-- [Log](./docs/4-Log.md)
-- [Domain](./docs/5-Endpoint.md)
-- [SSL/TLS](./docs/6-TLS.md)
-- [Exception and retry mechanism](./docs/7-ExceptionAndRetry.md)
+| Market | Link                                |
+|------|---------------------------------------|
+| HK   | https://developer.webull.hk/api-doc/  |
+| US	| https://developer.webull.com/api-doc/ |
