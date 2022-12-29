@@ -101,7 +101,7 @@ jobs:
         with:
           user: __token__
           password: ${{ secrets.PYPI_API_TOKEN }}
-  push-webull-python-sdk-trade-hk:
+  push-webull-python-sdk-trade:
     needs: push-webull-python-sdk-trade-events-core
     runs-on: ubuntu-latest
     steps:
