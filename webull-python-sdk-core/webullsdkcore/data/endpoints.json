@@ -1,13 +1,16 @@
 {
     "default_region": "us",
     "regions": ["us", "hk"],
-    "region_code_mapping": {
-        "us": "com",
-        "hk": "hk"
-    },
-    "regional_endpoint_pattern":  {
-        "api": "api.webull.[Region]",
-        "quotes-api": "quotes-api.webull.[Region]",
-        "events-api": "events-api.webull.[Region]"
+    "region_mapping": {
+        "us": {
+            "api": "api.webull.com",
+            "quotes-api": "usquotes-api.webullfintech.com",
+            "events-api": "events-api.webull.com"
+        },
+        "hk": {
+            "api": "api.webull.hk",
+            "quotes-api": "quotes-api.webull.hk",
+            "events-api": "events-api.webull.hk"
+        }
     }
 }

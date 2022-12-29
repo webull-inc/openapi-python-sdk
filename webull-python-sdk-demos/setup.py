@@ -15,8 +15,8 @@ with open("README.rst") as fp:
     LONG_DESCRIPTION = fp.read()
 
 requires = [
-    "webull-python-sdk-mdata==0.1.2",
-    "webull-python-sdk-trade-hk==0.1.2"
+    "webull-python-sdk-mdata==0.1.3",
+    "webull-python-sdk-trade==0.1.3"
 ]
 
 setup_args = {
@@ -26,11 +26,11 @@ setup_args = {
     'description': DESCRIPTION,
     'long_description_content_type': RD_CONTENT_TYPE,
     'license': LICENSE,
-    'url': URL, 
+    'url': URL,
     'packages': find_packages(exclude=["tests*"]),
     'package_data': {},
     'platforms': 'any',
-    'install_requires': requires 
+    'install_requires': requires
 }
 
 setup(name='webull-python-sdk-demos', **setup_args)
