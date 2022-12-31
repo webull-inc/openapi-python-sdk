@@ -1,12 +1,8 @@
 name: PyPI-CI
 
-# 点击star即可构建
-
 # on:
 #   watch:
 #     types: started
-
-# push 到main分支才会构建，忽略docs/**和LICENSE等目录
 on:
  push:
    branches:
@@ -18,6 +14,8 @@ on:
      - 'NOTICE'
      - 'README.md'
 
+ workflow_dispatch:
+  
 permissions:
   contents: read
 
