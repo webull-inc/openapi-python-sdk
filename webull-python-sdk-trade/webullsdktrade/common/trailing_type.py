@@ -18,6 +18,6 @@ from webullsdkcore.common.easy_enum import EasyEnum
 
 class TrailingType(EasyEnum):
     PERCENTAGE = (1, "PERCENTAGE")
-    DOLLAR = (2, "DOLLAR")
+    AMOUNT = (2, "AMOUNT")
 
 

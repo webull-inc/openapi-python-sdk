@@ -22,6 +22,8 @@ your_app_secret = "<your_app_secret>"
 account_id = "<your_account_id>"
 region_id = "hk"
 
+endpoint = "<event_api_endpoint>"
+
 
 class TestGrpcSubscribe(unittest.TestCase):
     def test_subscribe(self):
@@ -29,7 +31,7 @@ class TestGrpcSubscribe(unittest.TestCase):
         events_client = EventsClient(your_app_key, your_app_secret, region_id)
         # For non production environment, you need to set the domain name of the subscription service through eventsclient. For example, the domain name of the UAT environment is set here
         events_client = EventsClient(your_app_key, your_app_secret, region_id,
-                                     host="hk-openapi-events-api.uat.webullbroker.com")
+                                     host=endpoint)
 
         # Set the callback function when the event data is received.
         # The data of order status change is printed here

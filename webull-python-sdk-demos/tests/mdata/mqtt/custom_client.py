@@ -90,13 +90,16 @@ class CustomClient:
 
 your_app_key = "</your_app_key>"
 your_app_secret = "</your_app_secret>"
-optional_quotes_endpoint = "</optional_quotes_endpoint>"
+optional_quotes_endpoint = "</endpoint>"
+
+# 'hk' or 'us'
+region_id = '<region_id>'
 
 if __name__ == '__main__':
     custom_client = CustomClient(your_app_key,
                                  your_app_secret,
                                  optional_quotes_endpoint,
-                                 "hk")
+                                 region_id)
     custom_client.on_connect()
 
     try:

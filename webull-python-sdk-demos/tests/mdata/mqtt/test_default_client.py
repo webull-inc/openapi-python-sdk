@@ -18,10 +18,12 @@ from webullsdkmdata.common.category import Category
 from webullsdkmdata.common.subscribe_type import SubscribeType
 from webullsdkmdata.quotes.subscribe.default_client import DefaultQuotesClient
 
-optional_quotes_grpc_endpoint = "<optional_quotes_grpc_endpoint>"
-your_app_key = "<your_app_key>"
-your_app_secret = "<your_app_secret>"
-optional_quotes_endpoint = "<optional_quotes_endpoint>"
+your_app_key = "</your_app_key>"
+your_app_secret = "</your_app_secret>"
+optional_quotes_endpoint = "</optional_quotes_endpoint>"
+
+# 'hk' or 'us'
+region_id = '<region_id>'
 
 
 class TestDefaultQuotesClient(unittest.TestCase):
@@ -35,7 +37,7 @@ class TestDefaultQuotesClient(unittest.TestCase):
             print("Received message '" + str(message.payload) + "' on topic '"
                   + message.topic + "' with QoS " + str(message.qos))
 
-        client = DefaultQuotesClient(your_app_key, your_app_secret, 'hk', optional_quotes_grpc_endpoint)
+        client = DefaultQuotesClient(your_app_key, your_app_secret, 'hk', optional_quotes_endpoint)
         client.init_default_settings('00700', Category.HK_STOCK.name, SubscribeType.SNAPSHOT.name)
         client.on_log = pt_logs
         client.on_message = on_message

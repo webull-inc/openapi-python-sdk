@@ -23,7 +23,7 @@ from webullsdkcore.retry.backoff_strategy import FixedDelayStrategy, NoDelayStra
 from webullsdktradeeventscore.default_retry_policy import DefaultSubscribeRetryPolicy
 from unittest.mock import patch
 
-PRE_HOST = "hk-openapi-events-api.uat.webullbroker.com"
+PRE_HOST = "</event_api_endpoint>"
 
 
 class TestClient(unittest.TestCase):
