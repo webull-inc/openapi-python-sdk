@@ -17,6 +17,7 @@ from webullsdktrade.trade.order_operation import OrderOperation
 from webullsdkmdata.quotes.instrument import Instrument
 from webullsdkmdata.quotes.market_data import MarketData
 from webullsdktrade.trade.trade_instrument import TradeInstrument
+from webullsdktrade.trade.trade_calendar import TradeCalendar
 
 
 class API:
@@ -26,3 +27,4 @@ class API:
         self.account = Account(api_client)
         self.order = OrderOperation(api_client)
         self.trade_instrument = TradeInstrument(api_client)
+        self.trade_calendar = TradeCalendar(api_client)
