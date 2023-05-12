@@ -104,7 +104,7 @@ if __name__ == '__main__':
 
     try:
         # subscribe
-        res = custom_client.subscribe(['AAPL'], Category.US_STOCK.name,
+        res = custom_client.subscribe(['00700'], Category.HK_STOCK.name,
                                       [SubscribeType.QUOTE.name, SubscribeType.SNAPSHOT.name, SubscribeType.TICK.name])
         print(res.path)
         print(res.request_id)
@@ -117,7 +117,7 @@ if __name__ == '__main__':
     time.sleep(30)
 
     print("unsubscribe")
-    res = custom_client.unsubscribe(symbols=['AAPL'], category=Category.US_STOCK.name,
+    res = custom_client.unsubscribe(symbols=['00700'], category=Category.HK_STOCK.name,
                                     sub_types=[SubscribeType.QUOTE.name],
                                     unsubscribe_all=False)
 
