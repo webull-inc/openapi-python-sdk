@@ -15,8 +15,8 @@ with open("README.rst") as fp:
     LONG_DESCRIPTION = fp.read()
 
 requires = [
-    "webull-python-sdk-core==0.1.6",
-    "webull-python-sdk-quotes-core==0.1.6"
+    "webull-python-sdk-core==0.1.7",
+    "webull-python-sdk-quotes-core==0.1.7"
 ]
 
 setup_args = {

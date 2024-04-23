@@ -23,3 +23,5 @@ class InstrumentType(EasyEnum):
     UNIT = (3, "UNIT")
     WARRANT = (4, "WARRANT")
     RIGHT = (5, "RIGHT")
+    CALL_OPTION = (6, "CALL_OPTION")
+    PUT_OPTION = (7, "PUT_OPTION")

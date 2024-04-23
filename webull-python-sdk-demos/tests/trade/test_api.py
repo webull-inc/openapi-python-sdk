@@ -18,6 +18,9 @@ import uuid
 from webullsdkcore.client import ApiClient
 from webullsdkmdata.common.category import Category
 from webullsdktrade.api import API
+from webullsdktrade.common.markets import Markets
+from webullsdktrade.common.instrument_type import InstrumentType
+
 
 optional_api_endpoint = "<api_endpoint>"
 your_app_key = "<your_app_key>"
@@ -48,6 +51,9 @@ class TestApi(unittest.TestCase):
         if res.status_code == 200:
             print(res.json())
         res = api.trade_instrument.get_trade_instrument_detail("913244615")
+        if res.status_code == 200:
+            print(res.json())
+        res = api.trade_instrument.get_trade_security_detail("SPX", Markets.US.name, "OPTION", InstrumentType.CALL_OPTION.name, "3400", "2024-12-20")
         if res.status_code == 200:
             print(res.json())
         res = api.market_data.get_snapshot('AAPL', 'US_STOCK')

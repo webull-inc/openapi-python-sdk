@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 from webullsdktrade.request.get_trade_instrument_detail_request import TradeInstrumentDetailRequest
+from webullsdktrade.request.get_trade_security_detail_request import TradeSecurityDetailRequest
 
 
 class TradeInstrument:
@@ -28,4 +29,25 @@ class TradeInstrument:
         instrument_detail_request = TradeInstrumentDetailRequest()
         instrument_detail_request.set_instrument_id(instrument_id)
         response = self.client.get_response(instrument_detail_request)
+        return response
+
+    def get_trade_security_detail(self, symbol, market, instrument_super_type, instrument_type, strike_price, init_exp_date):
+        """
+        Query the information of traded symbol.
+
+        :param symbol: The ticker symbol or code representing a specific financial instrument or security.
+        :param market: e.g. US, HK.
+        :param instrument_super_type: Asset Class (e.g. EQUITY, OPTION.)
+        :param instrument_type: Type of underlying equity，required when querying for options information (e.g., WARRANT, UNITS, ETF, CALL_OPTION, PUT_OPTION).
+        :param strike_price: Option Strike Price, required when querying for options information.
+        :param init_exp_date: Option Expiration Date, Format: yyyy-MM-dd, required when querying for options information.
+        """
+        security_detail_request = TradeSecurityDetailRequest()
+        security_detail_request.set_symbol(symbol)
+        security_detail_request.set_market(market)
+        security_detail_request.set_instrument_super_type(instrument_super_type)
+        security_detail_request.set_instrument_type(instrument_type)
+        security_detail_request.set_strike_price(strike_price)
+        security_detail_request.set_init_exp_date(init_exp_date)
+        response = self.client.get_response(security_detail_request)
         return response
