@@ -17,7 +17,7 @@ from webullsdkcore.common.easy_enum import EasyEnum
 
 
 class Currency(EasyEnum):
-    CNY = (1, "CNY")
+    CNH = (1, "CNH")
     CAD = (2, "CAD")
     HKD = (3, "HKD")
     USD = (4, "USD")
