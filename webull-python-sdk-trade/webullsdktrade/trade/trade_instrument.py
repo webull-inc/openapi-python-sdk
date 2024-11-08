@@ -13,6 +13,7 @@
 # limitations under the License.
 from webullsdktrade.request.get_trade_instrument_detail_request import TradeInstrumentDetailRequest
 from webullsdktrade.request.get_trade_security_detail_request import TradeSecurityDetailRequest
+from webullsdktrade.request.get_tradeable_instruments_request import TradeableInstrumentRequest
 
 
 class TradeInstrument:
@@ -50,4 +51,22 @@ class TradeInstrument:
         security_detail_request.set_strike_price(strike_price)
         security_detail_request.set_init_exp_date(init_exp_date)
         response = self.client.get_response(security_detail_request)
+        return response
+
+    def get_tradeable_instruments(self, last_instrument_id=None, page_size=10):
+        """
+        Only for Webull JP
+
+        Paging query tradable instruments.
+
+        :param last_security_id: Pagination-specific id, if not passed, the first page will be searched by default
+
+        :param page_size: Number of entries per page: default value is 10,
+        and the maximum value is 100 with integers being filled.
+        """
+        tradeable_instruments_request = TradeableInstrumentRequest()
+        if last_instrument_id is not None:
+            tradeable_instruments_request.set_last_instrument_id(last_instrument_id)
+        tradeable_instruments_request.set_page_size(page_size)
+        response = self.client.get_response(tradeable_instruments_request)
         return response

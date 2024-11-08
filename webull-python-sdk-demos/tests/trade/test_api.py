@@ -26,7 +26,7 @@ optional_api_endpoint = "<api_endpoint>"
 your_app_key = "<your_app_key>"
 your_app_secret = "<your_app_secret>"
 account_id = "<your_account_id>"
-# 'hk' or 'us'
+# 'hk' or 'us' or 'jp'
 region_id = "<region_id>"
 api_client = ApiClient(your_app_key, your_app_secret, region_id)
 api_client.add_endpoint(region_id, optional_api_endpoint)
@@ -74,6 +74,15 @@ class TestApi(unittest.TestCase):
         res = api.market_data.get_history_bar('600000', 'CN_STOCK', 'M1')
         if res.status_code == 200:
             print('cn stock quote:', res.json())
+        res = api.market_data.get_eod_bar(instrument_ids='913303964', count=10)
+        if res.status_code == 200:
+            print('eod bar quote:', res.json())
+        res = api.market_data.get_corp_action(instrument_ids="913303964,913256135", event_types="301,302")
+        if res.status_code == 200:
+            print('corp action quote:', res.json())
+        res = api.trade_instrument.get_tradeable_instruments()
+        if res.status_code == 200:
+            print('tradeable instruments:', res.json())
         res = api.account.get_app_subscriptions()
         if res.status_code == 200:
             print('app subscriptions:', res.json())
@@ -173,6 +182,15 @@ class TestApi(unittest.TestCase):
         res = api.order.place_order(stock_order['account_id'], **stock_order['stock_order'])
         if res.status_code == 200:
             print('place order res:', res.json())
+        res = api.order.replace_order(stock_order['account_id'], **stock_order['stock_order'])
+        if res.status_code == 200:
+            print('replace order res:', res.json())
+        res = api.order.place_order_v2(stock_order['account_id'], stock_order['stock_order'])
+        if res.status_code == 200:
+            print('place order v2 res:', res.json())
+        res = api.order.replace_order_v2(stock_order['account_id'], stock_order['stock_order'])
+        if res.status_code == 200:
+            print('replace order v2 res:', res.json())
         res = api.order.list_open_orders(account_id, page_size=20)
         if res.status_code == 200:
             print('open orders:', res.json())

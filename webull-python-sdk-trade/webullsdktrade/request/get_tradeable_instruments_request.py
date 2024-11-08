@@ -12,16 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from webullsdkcore.common.easy_enum import EasyEnum
+# coding=utf-8
+from webullsdkcore.request import ApiRequest
 
 
-class Markets(EasyEnum):
+class TradeableInstrumentRequest(ApiRequest):
+    def __init__(self):
+        ApiRequest.__init__(self, "/trade/instrument/tradable/list", version='v1', method="GET", query_params={})
 
-    # US market
-    US = (1, "US")
+    def set_last_instrument_id(self, last_security_id):
+        self.add_query_param("last_security_id", last_security_id)
 
-    # HK market
-    HK = (2, "HK")
-
-    # JP market
-    JP = (3, "JP")
+    def set_page_size(self, page_size):
+        self.add_query_param("page_size", page_size)
