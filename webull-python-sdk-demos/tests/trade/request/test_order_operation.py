@@ -81,9 +81,3 @@ class TestorderOperation(unittest.TestCase):
         res = order_operation.cancel_order(account_id, cancel_client_order_id)
         if res.status_code == 200:
             print('cancel order response:', res.json())
-
-
-
-
-
-
