@@ -63,6 +63,11 @@ class TestEndpoint(unittest.TestCase):
         endpoint = resolver.resolve(endpoint_request)
         self.assertEqual(endpoint, 'quotes-api.webull.hk')
 
+        _region_id = 'jp'
+        endpoint_request = ResolveEndpointRequest(_region_id, api_type.QUOTES)
+        endpoint = resolver.resolve(endpoint_request)
+        self.assertEqual(endpoint, '')
+
     def test_api_endpoint(self):
         """
             Set by Request, and it only takes effect for the current Request. The sample code is as follows.
@@ -78,6 +83,11 @@ class TestEndpoint(unittest.TestCase):
         endpoint = resolver.resolve(endpoint_request)
         self.assertEqual(endpoint, 'api.webull.hk')
 
+        _region_id = 'jp'
+        endpoint_request = ResolveEndpointRequest(_region_id)
+        endpoint = resolver.resolve(endpoint_request)
+        self.assertEqual(endpoint, 'api.webull.co.jp')
+
     def test_event_endpoint(self):
         resolver = DefaultEndpointResolver(self)
         _region_id = 'us'
@@ -89,3 +99,8 @@ class TestEndpoint(unittest.TestCase):
         endpoint_request = ResolveEndpointRequest(_region_id, api_type.EVENTS)
         endpoint = resolver.resolve(endpoint_request)
         self.assertEqual(endpoint, 'events-api.webull.hk')
+
+        _region_id = 'jp'
+        endpoint_request = ResolveEndpointRequest(_region_id, api_type.EVENTS)
+        endpoint = resolver.resolve(endpoint_request)
+        self.assertEqual(endpoint, 'events-api.webull.co.jp')

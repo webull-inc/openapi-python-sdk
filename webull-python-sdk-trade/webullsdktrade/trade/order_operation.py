@@ -22,7 +22,9 @@ from webullsdktrade.request.get_open_orders_request import OpenOrdersListRequest
 from webullsdktrade.request.get_order_detail_request import OrderDetailRequest
 from webullsdktrade.request.get_today_orders_request import TodayOrdersListRequest
 from webullsdktrade.request.palce_order_request import PlaceOrderRequest
+from webullsdktrade.request.place_order_request_v2 import PlaceOrderRequestV2
 from webullsdktrade.request.replace_order_request import ReplaceOrderRequest
+from webullsdktrade.request.replace_order_request_v2 import ReplaceOrderRequestV2
 
 
 class OrderOperation:
@@ -89,6 +91,20 @@ class OrderOperation:
                                               side=side, tif=tif, extended_hours_trading=extended_hours_trading,
                                               order_type=order_type, limit_price=limit_price, stop_price=stop_price,
                                               trailing_type=trailing_type, trailing_stop_step=trailing_stop_step)
+        response = self.client.get_response(replace_order_request)
+        return response
+
+    def place_order_v2(self, account_id, stock_order):
+        place_order_request = PlaceOrderRequestV2()
+        place_order_request.set_account_id(account_id)
+        place_order_request.set_stock_order(stock_order)
+        response = self.client.get_response(place_order_request)
+        return response
+
+    def replace_order_v2(self, account_id, stock_order):
+        replace_order_request = ReplaceOrderRequestV2()
+        replace_order_request.set_account_id(account_id)
+        replace_order_request.set_stock_order(stock_order)
         response = self.client.get_response(replace_order_request)
         return response
 

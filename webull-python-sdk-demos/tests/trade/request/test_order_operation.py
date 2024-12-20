@@ -44,7 +44,7 @@ class TestorderOperation(unittest.TestCase):
                 "extended_hours_trading": False,
             }
         }
-        res = order_operation.place_order(account_id, **stock_order['stock_order'])
+        res = order_operation.place_order(account_id, stock_order['stock_order'])
         if res.status_code == 200:
             print('place order status:', res.json())
 
