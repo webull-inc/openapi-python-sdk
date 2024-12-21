@@ -30,8 +30,7 @@ jobs:
         python-version: '3.x'
     - name: Install dependencies
       run:
-        python -m pip install --upgrade pip 
-        pip install build
+        python -m pip install --upgrade pip && pip install build
     - name: Build package
       run: python -m build webull-python-sdk-core --sdist --wheel --outdir dist/
     - name: Publish package
@@ -50,8 +49,7 @@ jobs:
           python-version: '3.x'
       - name: Install dependencies
         run:
-          python -m pip install --upgrade pip
-          pip install build
+          python -m pip install --upgrade pip && pip install build
       - name: Build package
         run: python -m build webull-python-sdk-quotes-core --sdist --wheel --outdir dist/
       - name: Publish package
@@ -70,8 +68,7 @@ jobs:
           python-version: '3.x'
       - name: Install dependencies
         run:
-          python -m pip install --upgrade pip
-          pip install build
+          python -m pip install --upgrade pip && pip install build
       - name: Build package
         run: python -m build webull-python-sdk-mdata --sdist --wheel --outdir dist/
       - name: Publish package
@@ -90,8 +87,7 @@ jobs:
           python-version: '3.x'
       - name: Install dependencies
         run:
-          python -m pip install --upgrade pip
-          pip install build
+          python -m pip install --upgrade pip && pip install build
       - name: Build package
         run: python -m build webull-python-sdk-trade-events-core --sdist --wheel --outdir dist/
       - name: Publish package
@@ -110,8 +106,7 @@ jobs:
           python-version: '3.x'
       - name: Install dependencies
         run:
-          python -m pip install --upgrade pip
-          pip install build
+          python -m pip install --upgrade pip && pip install build
       - name: Build package
         run: python -m build webull-python-sdk-trade --sdist --wheel --outdir dist/
       - name: Publish package
