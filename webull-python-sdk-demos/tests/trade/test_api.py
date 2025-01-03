@@ -21,7 +21,6 @@ from webullsdktrade.api import API
 from webullsdktrade.common.markets import Markets
 from webullsdktrade.common.instrument_type import InstrumentType
 
-
 optional_api_endpoint = "<api_endpoint>"
 your_app_key = "<your_app_key>"
 your_app_secret = "<your_app_secret>"
@@ -53,7 +52,8 @@ class TestApi(unittest.TestCase):
         res = api.trade_instrument.get_trade_instrument_detail("913244615")
         if res.status_code == 200:
             print(res.json())
-        res = api.trade_instrument.get_trade_security_detail("SPX", Markets.US.name, "OPTION", InstrumentType.CALL_OPTION.name, "3400", "2024-12-20")
+        res = api.trade_instrument.get_trade_security_detail("SPX", Markets.US.name, "OPTION",
+                                                             InstrumentType.CALL_OPTION.name, "3400", "2024-12-20")
         if res.status_code == 200:
             print(res.json())
         res = api.market_data.get_snapshot('AAPL', 'US_STOCK')
@@ -101,19 +101,6 @@ class TestApi(unittest.TestCase):
             "account_id": account_id,
             "stock_order": {
                 "client_order_id": client_order_id,
-                "instrument_id": "913256409",
-                "side": "BUY",
-                "tif": "DAY",
-                "order_type": "ENHANCED_LIMIT",
-                "limit_price": "1.000",
-                "qty": "100",
-                "extended_hours_trading": False
-            }
-        }
-        stock_order = {
-            "account_id": account_id,
-            "stock_order": {
-                "client_order_id": client_order_id,
                 "instrument_id": "913256135",
                 "side": "BUY",
                 "tif": "DAY",
@@ -123,6 +110,24 @@ class TestApi(unittest.TestCase):
                 "extended_hours_trading": False
             }
         }
+        """
+        ENHANCED_LIMIT stock_order
+        stock_order = {
+            "account_id": account_id,
+            "stock_order": {
+                "client_order_id": client_order_id,
+                "instrument_id": "913256409",
+                "side": "BUY",
+                "tif": "DAY",
+                "order_type": "ENHANCED_LIMIT",
+                "limit_price": "1.000",
+                "qty": "100",
+                "extended_hours_trading": False
+            }
+        }
+        """
+        """
+        STOP_LOSS stock_order
         stock_order = {
             "account_id": account_id,
             "stock_order": {
@@ -136,6 +141,9 @@ class TestApi(unittest.TestCase):
                 "extended_hours_trading": False
             }
         }
+        """
+        """
+        LIMIT stock_order
         stock_order = {
             "account_id": account_id,
             "stock_order": {
@@ -149,6 +157,9 @@ class TestApi(unittest.TestCase):
                 "extended_hours_trading": False
             }
         }
+        """
+        """
+        STOP_LOSS_LIMIT stock_order
         stock_order = {
             "account_id": account_id,
             "stock_order": {
@@ -163,6 +174,9 @@ class TestApi(unittest.TestCase):
                 "extended_hours_trading": False
             }
         }
+        """
+        """
+        TRAILING_STOP_LOSS stock_order
         stock_order = {
             "account_id": account_id,
             "stock_order": {
@@ -179,6 +193,8 @@ class TestApi(unittest.TestCase):
                 "extended_hours_trading": False
             }
         }
+        """
+
         res = api.order.place_order(stock_order['account_id'], **stock_order['stock_order'])
         if res.status_code == 200:
             print('place order res:', res.json())

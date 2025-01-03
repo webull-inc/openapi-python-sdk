@@ -36,10 +36,3 @@ class ReplaceOrderRequestV2(ApiRequest):
         self._stock_order.update({k: v for k, v in stock_order.items() if v is not None and k != 'self'})
         if 'close_contracts' in stock_order and stock_order['close_contracts'] is not None:
             self.set_close_contracts(stock_order['close_contracts'])
-
-
-
-
-
-
-
