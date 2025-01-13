@@ -23,7 +23,7 @@ requires = [
     "grpcio==1.51.1",
     "grpcio-tools==1.51.1",
     "protobuf==4.21.12",
-    "webull-python-sdk-core==0.1.10"
+    "webull-python-sdk-core==0.1.11"
 ]
 
 setup_args = {

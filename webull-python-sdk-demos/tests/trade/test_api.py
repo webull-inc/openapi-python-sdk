@@ -12,8 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import json
 import unittest
 import uuid
+from time import sleep
 
 from webullsdkcore.client import ApiClient
 from webullsdkmdata.common.category import Category
@@ -219,3 +221,71 @@ class TestApi(unittest.TestCase):
         res = api.order.cancel_order(account_id, client_order_id)
         if res.status_code == 200:
             print('cancel order status:', res.json())
+
+
+
+        # Options
+        # For option order inquiries, please use the V2 query interface: api.order_v2.get_order_detail(account_id, client_order_id).
+        client_order_id = uuid.uuid4().hex
+        option_new_orders = [
+            {
+                "client_order_id": client_order_id,
+                "combo_type": "NORMAL",
+                "order_type": "LIMIT",
+                "quantity": "1",
+                "limit_price": "11.25",
+                "option_strategy": "SINGLE",
+                "side": "BUY",
+                "time_in_force": "GTC",
+                "entrust_type": "QTY",
+                "orders": [
+                    {
+                        "side": "BUY",
+                        "quantity": "1",
+                        "symbol": "AAPL",
+                        "strike_price": "250.0",
+                        "init_exp_date": "2025-08-15",
+                        "instrument_type": "OPTION",
+                        "option_type": "CALL",
+                        "market": "US"
+                    }
+                ]
+            }
+        ]
+
+        option_modify_orders = [
+            {
+                "client_order_id": client_order_id,
+                "quantity": "2",
+                "limit_price": "11.3",
+                "orders": [
+                    {
+                        "client_order_id": client_order_id,
+                        "quantity": "2"
+                    }
+                ]
+            }
+        ]
+
+        # preview
+        res = api.order.preview_option(account_id, option_new_orders)
+        if res.status_code == 200:
+            print("preview option=" + json.dumps(res.json(), indent=4))
+        sleep(5)
+
+        # place
+        res = api.order.place_option(account_id, option_new_orders)
+        if res.status_code == 200:
+            print("place option=" + json.dumps(res.json(), indent=4))
+        sleep(5)
+
+        # replace
+        res = api.order.replace_option(account_id, option_modify_orders)
+        if res.status_code == 200:
+            print("replace option=" + json.dumps(res.json(), indent=4))
+        sleep(5)
+
+        # cancel
+        res = api.order.cancel_option(account_id, client_order_id)
+        if res.status_code == 200:
+            print("cancel option=" + json.dumps(res.json(), indent=4))

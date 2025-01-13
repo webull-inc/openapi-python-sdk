@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # coding=utf-8
-
 from webullsdktrade.request.v2.cancel_order_request import CancelOrderRequest
+from webullsdktrade.request.v2.get_order_detail_request import OrderDetailRequest
 from webullsdktrade.request.v2.get_order_history_request import OrderHistoryRequest
 from webullsdktrade.request.v2.palce_order_request import PlaceOrderRequest
 from webullsdktrade.request.v2.preview_order_request import PreviewOrderRequest
@@ -75,7 +75,19 @@ class OrderOperationV2:
         response = self.client.get_response(cancel_order_request)
         return response
 
-    def get_order_history_request(self, account_id, page_size=None, start_date=None, last_client_order_id=None):
+    def get_order_detail(self, account_id, client_order_id):
+        """
+        This interface is exclusively available for Webull Hong Kong brokerage clients.
+         Currently, it does not support Webull Japan or Webull U.S. clients,
+         but support will be gradually introduced in the future.
+        """
+        order_detail_request = OrderDetailRequest()
+        order_detail_request.set_account_id(account_id)
+        order_detail_request.set_client_order_id(client_order_id)
+        response = self.client.get_response(order_detail_request)
+        return response
+
+    def get_order_history_request(self, account_id, page_size=None, start_date=None, end_date=None, last_client_order_id=None):
         """
          This interface is exclusively available for Webull Japan brokerage clients.
          Currently, it does not support Webull Hong Kong or Webull U.S. clients,
@@ -87,6 +99,8 @@ class OrderOperationV2:
             order_history_request.set_page_size(page_size=page_size)
         if start_date:
             order_history_request.set_start_date(start_date=start_date)
+        if end_date:
+            order_history_request.set_end_date(end_date=end_date)
         if last_client_order_id:
             order_history_request.set_last_client_order_id(last_client_order_id=last_client_order_id)
         response = self.client.get_response(order_history_request)
