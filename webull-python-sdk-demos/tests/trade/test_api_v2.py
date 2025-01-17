@@ -96,3 +96,8 @@ class TestApi(unittest.TestCase):
         res = api.order_v2.get_order_history_request(account_id=account_id)
         if res.status_code == 200:
             print("order_history_res=" + json.dumps(res.json(), indent=4))
+
+        # order detail
+        res = api.order_v2.get_order_detail(account_id=account_id, client_order_id=client_order_id)
+        if res.status_code == 200:
+            print("order_detail_res=" + json.dumps(res.json(), indent=4))

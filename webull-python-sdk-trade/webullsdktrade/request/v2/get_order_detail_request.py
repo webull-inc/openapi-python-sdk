@@ -15,21 +15,12 @@
 from webullsdkcore.request import ApiRequest
 
 
-class OrderHistoryRequest(ApiRequest):
+class OrderDetailRequest(ApiRequest):
     def __init__(self):
-        ApiRequest.__init__(self, "/openapi/account/orders/history", version='v1', method="GET", body_params={})
+        ApiRequest.__init__(self, "/openapi/account/orders/detail", version='v1', method="GET", body_params={})
 
     def set_account_id(self, account_id):
         self.add_query_param("account_id", account_id)
 
-    def set_page_size(self, page_size):
-        self.add_query_param("page_size", page_size)
-
-    def set_start_date(self, start_date):
-        self.add_query_param("start_date", start_date)
-
-    def set_end_date(self, end_date):
-        self.add_query_param("end_date", end_date)
-
-    def set_last_client_order_id(self, last_client_order_id):
-        self.add_query_param("last_client_order_id", last_client_order_id)
+    def set_client_order_id(self, client_order_id):
+        self.add_query_param("client_order_id", client_order_id)
