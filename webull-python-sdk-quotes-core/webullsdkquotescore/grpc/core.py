@@ -148,7 +148,9 @@ class BidiRpc(object):
         )
 
         signature, metadata = composer.calc_signature(self._app_key, self._app_secret, self._host, self._stream_uri,
-                                                      None)
+                                                      None, user_id=self._user_id)
+
+        self._initial_metadata = metadata
 
         call = self._start_rpc(iter(request_generator), metadata=metadata)
 
@@ -177,7 +179,12 @@ class BidiRpc(object):
         if self.call.is_active():
             self._request_queue.put(request)
         else:
-            next(self.call)
+            try:
+                next(self.call)
+                if self.call.is_active():
+                    self._request_queue.put(request)
+            except Exception as e:
+                raise ValueError(f"Call is not active and failed to activate: {e}")
 
     def recv(self):
         if self.call is None:
@@ -210,7 +217,10 @@ class ResumableBidiRpc(BidiRpc):
             should_terminate=_never_terminate,
             initial_request=None,
             throttle_reopen=False,
+            user_id=None,
     ):
+        self._user_id = user_id
+
         super(ResumableBidiRpc, self).__init__(start_rpc, app_key, app_secret, host, stream_uri,
                                                initial_request)
         self._should_recover = should_recover
@@ -292,7 +302,24 @@ class ResumableBidiRpc(BidiRpc):
                     self._reopen()
 
     def _send(self, request):
-        self._request_queue.put(request)
+        if self.call is None:
+            raise ValueError("Can not send() on an RPC that has never been open()ed.")
+
+        if self.call.is_active():
+            # Place the request directly into the queue
+            self._request_queue.put(request)
+        else:
+            # Connection is not active, try to activate connection
+            try:
+                next(self.call)
+            except Exception as e:
+                # Try to reopen the connection
+                self._reopen()
+                # Try sending again after the connection is reopened
+                if self.call and self.call.is_active():
+                    self._request_queue.put(request)
+                else:
+                    raise ValueError("Failed to re-establish connection for sending request.")
 
     def send(self, request):
         return self._recoverable(self._send, request)

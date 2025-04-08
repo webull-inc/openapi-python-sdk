@@ -43,13 +43,15 @@ import json
 import os
 import webullsdkcore
 from webullsdkcore.endpoint import EndpointResolver
+from webullsdkcore.common.customer_type import CustomerType
 
 ENDPOINT_JSON = os.path.join(os.path.dirname(webullsdkcore.__file__), "data", "endpoints.json")
 
 
 class LocalConfigRegionalEndpointResolver(EndpointResolver):
-    def __init__(self, config_json_str=None):
+    def __init__(self, config_json_str=None, customer_type=None):
         EndpointResolver.__init__(self)
+        self._customer_type = customer_type
         if config_json_str:
             obj = json.loads(config_json_str)
         else:
@@ -68,7 +70,12 @@ class LocalConfigRegionalEndpointResolver(EndpointResolver):
         if request.region_id:
             region_code_mapping = self._region_mapping.get(request.region_id)
         else:
-            region_code_mapping = self._region_code_mapping.get(self._default_region)
+            region_code_mapping = self._region_mapping.get(self._default_region)
+
         if region_code_mapping:
-            return region_code_mapping.get(request.api_type)
+            # Select the appropriate API endpoint based on client type
+            customer_type = self._customer_type.set_customer_type() if self._customer_type else CustomerType.INDIVIDUAL
+            customer_type_key = "institution" if customer_type.value == CustomerType.INSTITUTION.value else "individual"
+            customer_endpoints = region_code_mapping.get(customer_type_key, {})
+            return customer_endpoints.get(request.api_type)
         return None

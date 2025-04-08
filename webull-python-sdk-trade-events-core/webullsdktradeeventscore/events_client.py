@@ -31,6 +31,7 @@ import webullsdktradeeventscore.events_pb2_grpc as pb_grpc
 from webullsdktradeeventscore.default_retry_policy import (
     DefaultSubscribeRetryPolicy, SubscribeRetryPolicyContext)
 from webullsdktradeeventscore.signature_composer import calc_signature
+from webullsdkcore.common.customer_type import CustomerType
 
 # contentTypes
 JSON = "application/json"
@@ -40,11 +41,12 @@ DEFAULT_REGION_ID = "us"
 
 
 class EventsClient():
-    def __init__(self, app_key, app_secret, region_id=DEFAULT_REGION_ID, host=None, port=443, tls_enable=True, retry_policy=None):
+    def __init__(self, app_key, app_secret, region_id=DEFAULT_REGION_ID, host=None, port=443, customer_type=CustomerType.INDIVIDUAL,tls_enable=True, retry_policy=None):
         self._app_key = app_key
         self._app_secret = app_secret
         self._region_id = region_id
         self._tls_enable = tls_enable
+        self._customer_type = customer_type
         self._endpoint_resolver = DefaultEndpointResolver(self)
         if not host:
             endpoint_request = ResolveEndpointRequest(
@@ -158,6 +160,9 @@ class EventsClient():
                 return
             logger = logging.getLogger(__name__)
         self._logger = logger
+
+    def set_customer_type(self):
+        return self._customer_type
 
     def disable_logger(self):
         self._logger = None

@@ -21,6 +21,7 @@ import uuid
 import paho.mqtt.client as mqttc
 import webullsdkcore.exception.error_code as error_code
 from webullsdkcore.common import api_type
+from webullsdkcore.common.customer_type import CustomerType
 from webullsdkcore.endpoint.default_endpoint_resolver import \
     DefaultEndpointResolver
 from webullsdkcore.endpoint.resolver_endpoint_request import \
@@ -48,10 +49,12 @@ class QuotesClient(mqttc.Client):
                  host=None,
                  grpc_port=443,
                  mqtt_post=8883,
+                 customer_type=CustomerType.INDIVIDUAL,
                  tls_enable=True,
                  transport="tcp",
                  retry_policy=None,
                  downgrade_message=None):
+        self._customer_type = customer_type
         self._endpoint_resolver = DefaultEndpointResolver(self)
         self._client_id = app_key + "_" + str(uuid.uuid4())
         self._app_key = app_key
@@ -68,7 +71,7 @@ class QuotesClient(mqttc.Client):
         self._quotes_decoder = QuotesDecoder()
         self._grpc_client = GrpcApiClient(
             app_key=app_key, app_secret=app_secret, region_id=region_id, host=host, port=grpc_port,
-            tls_enable=tls_enable, downgrade_message=downgrade_message)
+            customer_type=customer_type, tls_enable=tls_enable, downgrade_message=downgrade_message)
 
         def _quotes_message(client, userdata, message):
             decoded = client._quotes_decoder.decode(message)
@@ -260,6 +263,9 @@ class QuotesClient(mqttc.Client):
             return mqttc.MQTT_ERR_INVAL
         if threading.current_thread() != self._thread:
             self._thread.join()
+
+    def set_customer_type(self):
+        return self._customer_type
 
     def loop_stop(self):
         return super().loop_stop()

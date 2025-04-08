@@ -24,9 +24,9 @@ class AccountV2:
 
     def get_account_list(self):
         """
-         This interface is exclusively available for Webull Japan brokerage clients.
-         Currently, it does not support Webull Hong Kong or Webull U.S. clients,
-         but support will be gradually introduced in the future.
+        This interface is currently available only to individual brokerage customers in Webull Japan
+        and institutional brokerage clients in Webull Hong Kong. It is not yet available to
+        Webull US brokerage customers, but support will be introduced progressively in the future.
         """
         account_list = GetAccountList()
         response = self.client.get_response(account_list)
@@ -34,9 +34,9 @@ class AccountV2:
 
     def get_account_balance(self, account_id):
         """
-         This interface is exclusively available for Webull Japan brokerage clients.
-         Currently, it does not support Webull Hong Kong or Webull U.S. clients,
-         but support will be gradually introduced in the future.
+        This interface is currently available only to individual brokerage customers in Webull Japan
+        and institutional brokerage clients in Webull Hong Kong. It is not yet available to
+        Webull US brokerage customers, but support will be introduced progressively in the future.
         """
         account_balance_request = AccountBalanceRequest()
         account_balance_request.set_account_id(account_id)
@@ -45,9 +45,9 @@ class AccountV2:
 
     def get_account_position(self, account_id):
         """
-         This interface is exclusively available for Webull Japan brokerage clients.
-         Currently, it does not support Webull Hong Kong or Webull U.S. clients,
-         but support will be gradually introduced in the future.
+        This interface is currently available only to individual brokerage customers in Webull Japan
+        and institutional brokerage clients in Webull Hong Kong. It is not yet available to
+        Webull US brokerage customers, but support will be introduced progressively in the future.
         """
         account_positions_request = AccountPositionsRequest()
         account_positions_request.set_account_id(account_id)

@@ -47,6 +47,7 @@ SIGN_VERSION = "x-signature-version"
 NONCE = "x-signature-nonce"
 TIMESTAMP = "x-timestamp"
 VERSION = "x-version"
+WB_USER_ID = "wb-user-id"
 
 NATIVE_HOST = "Host"
 NATIVE_CONTENT_TYPE = "Content-Type"

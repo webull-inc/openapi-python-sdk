@@ -18,7 +18,10 @@ from webullsdktrade.request.v2.get_order_history_request import OrderHistoryRequ
 from webullsdktrade.request.v2.palce_order_request import PlaceOrderRequest
 from webullsdktrade.request.v2.preview_order_request import PreviewOrderRequest
 from webullsdktrade.request.v2.replace_order_request import ReplaceOrderRequest
-
+from webullsdktrade.request.v2.cancel_option_request import CancelOptionRequest
+from webullsdktrade.request.v2.replace_option_request import ReplaceOptionRequest
+from webullsdktrade.request.v2.place_option_request import PlaceOptionRequest
+from webullsdktrade.request.v2.preview_option_request import PreviewOptionRequest
 
 class OrderOperationV2:
     def __init__(self, api_client):
@@ -26,9 +29,9 @@ class OrderOperationV2:
 
     def preview_order(self, account_id, preview_orders):
         """
-         This interface is exclusively available for Webull Japan brokerage clients.
-         Currently, it does not support Webull Hong Kong or Webull U.S. clients,
-         but support will be gradually introduced in the future.
+        This interface is currently available only to individual brokerage customers in Webull Japan
+        and institutional brokerage clients in Webull Hong Kong. It is not yet available to
+        Webull US brokerage customers, but support will be introduced progressively in the future.
         """
         preview_order_request = PreviewOrderRequest()
         preview_order_request.set_account_id(account_id)
@@ -39,9 +42,9 @@ class OrderOperationV2:
 
     def place_order(self, account_id, new_orders):
         """
-         This interface is exclusively available for Webull Japan brokerage clients.
-         Currently, it does not support Webull Hong Kong or Webull U.S. clients,
-         but support will be gradually introduced in the future.
+        This interface is currently available only to individual brokerage customers in Webull Japan
+        and institutional brokerage clients in Webull Hong Kong. It is not yet available to
+        Webull US brokerage customers, but support will be introduced progressively in the future.
         """
         place_order_req = PlaceOrderRequest()
         place_order_req.set_account_id(account_id)
@@ -52,9 +55,9 @@ class OrderOperationV2:
 
     def replace_order(self, account_id, modify_orders):
         """
-         This interface is exclusively available for Webull Japan brokerage clients.
-         Currently, it does not support Webull Hong Kong or Webull U.S. clients,
-         but support will be gradually introduced in the future.
+        This interface is currently available only to individual brokerage customers in Webull Japan
+        and institutional brokerage clients in Webull Hong Kong. It is not yet available to
+        Webull US brokerage customers, but support will be introduced progressively in the future.
         """
         replace_order_request = ReplaceOrderRequest()
         replace_order_request.set_account_id(account_id)
@@ -65,9 +68,9 @@ class OrderOperationV2:
 
     def cancel_order_v2(self, account_id, client_order_id):
         """
-         This interface is exclusively available for Webull Japan brokerage clients.
-         Currently, it does not support Webull Hong Kong or Webull U.S. clients,
-         but support will be gradually introduced in the future.
+        This interface is currently available only to individual brokerage customers in Webull Japan
+        and institutional brokerage clients in Webull Hong Kong. It is not yet available to
+        Webull US brokerage customers, but support will be introduced progressively in the future.
         """
         cancel_order_request = CancelOrderRequest()
         cancel_order_request.set_account_id(account_id)
@@ -89,9 +92,15 @@ class OrderOperationV2:
 
     def get_order_history_request(self, account_id, page_size=None, start_date=None, end_date=None, last_client_order_id=None):
         """
-         This interface is exclusively available for Webull Japan brokerage clients.
-         Currently, it does not support Webull Hong Kong or Webull U.S. clients,
-         but support will be gradually introduced in the future.
+        Historical orders, query the records of the past 7 days. If they are group orders, will be returned together,
+        and the number of orders returned on one page may exceed the page_size.
+
+        :param account_id: Account ID
+        :param page_size: Limit the number of records per query to 10 by default.
+        :param start_date: Start date (if empty, the default is the last 7 days), in the format of yyyy-MM-dd.
+        :param end_date: End date (if empty, the default is the last 7 days), in the format of yyyy-MM-dd.
+        :param last_client_order_id: The last order ID from the previous response. For the first page query,
+        this parameter is not required.
         """
         order_history_request = OrderHistoryRequest()
         order_history_request.set_account_id(account_id=account_id)
@@ -104,4 +113,67 @@ class OrderOperationV2:
         if last_client_order_id:
             order_history_request.set_last_client_order_id(last_client_order_id=last_client_order_id)
         response = self.client.get_response(order_history_request)
+        return response
+    def query_order_detail(self, account_id, client_order_id):
+        """
+        This interface is currently available only to individual and institutional clients
+        of Webull Hong Kong brokerages. It is not yet supported for clients of Webull US
+        and Webull Japan brokerages, but support will be gradually introduced in the future.
+        Paging query pending orders.
+
+        :param account_id: Account ID
+        :param client_order_id: The 3rd party order ID.
+        """
+        order_detail_request = OrderDetailRequest()
+        order_detail_request.set_account_id(account_id)
+        order_detail_request.set_client_order_id(client_order_id)
+        response = self.client.get_response(order_detail_request)
+        return response
+
+    def preview_option(self, account_id, new_orders):
+        """
+        This interface is currently available only to individual and institutional clients
+        of Webull Hong Kong brokerages. It is not yet supported for clients of Webull US
+        and Webull Japan brokerages, but support will be gradually introduced in the future.
+        """
+        preview_option_request = PreviewOptionRequest()
+        preview_option_request.set_new_orders(new_orders)
+        preview_option_request.set_account_id(account_id)
+        response = self.client.get_response(preview_option_request)
+        return response
+
+    def place_option(self, account_id, new_orders):
+        """
+        This interface is currently available only to individual and institutional clients
+        of Webull Hong Kong brokerages. It is not yet supported for clients of Webull US
+        and Webull Japan brokerages, but support will be gradually introduced in the future.
+        """
+        place_option_request = PlaceOptionRequest()
+        place_option_request.set_new_orders(new_orders)
+        place_option_request.set_account_id(account_id)
+        response = self.client.get_response(place_option_request)
+        return response
+
+    def replace_option(self, account_id, modify_orders):
+        """
+        This interface is currently available only to individual and institutional clients
+        of Webull Hong Kong brokerages. It is not yet supported for clients of Webull US
+        and Webull Japan brokerages, but support will be gradually introduced in the future.
+        """
+        replace_option_request = ReplaceOptionRequest()
+        replace_option_request.set_modify_orders(modify_orders)
+        replace_option_request.set_account_id(account_id)
+        response = self.client.get_response(replace_option_request)
+        return response
+
+    def cancel_option(self, account_id, client_order_id):
+        """
+        This interface is currently available only to individual and institutional clients
+        of Webull Hong Kong brokerages. It is not yet supported for clients of Webull US
+        and Webull Japan brokerages, but support will be gradually introduced in the future.
+        """
+        cancel_option_request = CancelOptionRequest()
+        cancel_option_request.set_client_order_id(client_order_id)
+        cancel_option_request.set_account_id(account_id)
+        response = self.client.get_response(cancel_option_request)
         return response
