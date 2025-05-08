@@ -45,8 +45,10 @@ import logging
 import platform
 import json
 from webullsdkcore import compat
+from webullsdkcore.common.customer_type import CustomerType
 from webullsdkcore.exception import error_code
 from webullsdkcore.exception.exceptions import ClientException, ServerException
+from webullsdkcore.headers import WB_USER_ID
 from webullsdkcore.retry.retry_policy_context import RetryPolicyContext
 from webullsdkcore.vendored.requests import codes
 from webullsdkcore.vendored.requests.adapters import HTTPAdapter
@@ -79,19 +81,22 @@ class ApiClient:
         app_secret=None,
         region_id=DEFAULT_REGION_ID,
         user_agent=None,
-        port=DEFAULT_PORT, 
+        port=DEFAULT_PORT,
+        customer_type=CustomerType.INDIVIDUAL,
         connect_timeout=None,
         timeout=None,
         credential=None,
         verify=None,
         auto_retry=False,
-        max_retry_num=None
+        max_retry_num=None,
+        user_id=None
     ):
         self._app_key = app_key
         self._app_secret = app_secret
         self._region_id = region_id
         self._user_agent = user_agent
         self._port = port
+        self._customer_type = customer_type
         self._connect_timeout = connect_timeout
         self._read_timeout = timeout
         self._extra_user_agent = {}
@@ -105,6 +110,7 @@ class ApiClient:
         self._endpoint_resolver = DefaultEndpointResolver(self) 
         self._max_retry_num = max_retry_num
         self._auto_retry = auto_retry
+        self._user_id = user_id
         if self._auto_retry:
             self._retry_policy = retry_policy.get_default_retry_policy(self._max_retry_num)
         else:
@@ -124,6 +130,12 @@ class ApiClient:
     
     def get_verify(self):
         return self._verify
+
+    def set_customer_type(self):
+        return self._customer_type
+
+    def set_user_id(self):
+        return self._user_id
 
     def set_user_agent(self, agent):
         """
@@ -237,6 +249,10 @@ class ApiClient:
         if not isinstance(request, BaseRequest):
             raise ClientException(error_code.SDK_INVALID_REQUEST)
         request.add_header('Accept-Encoding', 'gzip')
+
+        if self._user_id:
+            request.add_header(WB_USER_ID, self._user_id)
+
         if request.endpoint:
             endpoint = request.endpoint
         else:
@@ -320,7 +336,8 @@ class ApiClient:
     
     def _resolve_endpoint(self, request):
         resolve_request = ResolveEndpointRequest(
-            self._region_id
+            self._region_id,
+            self._customer_type
         )
         return self._endpoint_resolver.resolve(resolve_request)
     

@@ -18,10 +18,12 @@ import grpc
 import logging
 import threading
 from datetime import timedelta, datetime
+import time
 
 from webullsdkcore import compat
 import webullsdkquotescore
 from webullsdkcore.cache import MsgCache
+from webullsdkcore.common.customer_type import CustomerType
 from webullsdkquotescore.exceptions import ExitedException
 from webullsdkquotescore.grpc.core import ResumableBidiRpc, BackgroundConsumer
 from webullsdkquotescore.grpc.error import ExceptionContext
@@ -42,15 +44,18 @@ class Connect(object):
                  region_id=None,
                  host=None,
                  port=443,
+                 customer_type=CustomerType.INDIVIDUAL,
                  cache_timeout=120,
                  tls_enable=True,
                  retry_policy=None,
-                 daemon=False):
+                 daemon=False,
+                 user_id=None):
         self._rpc = None
         self._consumer = None
         self._on_downgrade_message = None
         self._app_key = app_key
         self._app_secret = app_secret
+        self._customer_type = customer_type
         self._region_id = region_id
         self._tls_enable = tls_enable
         self._host = host
@@ -58,6 +63,7 @@ class Connect(object):
         self._target = self._host + ":" + str(self._port)
         self._cache_timeout = cache_timeout
         self._daemon = daemon
+        self._user_id = user_id
 
         self._msg_cache = MsgCache(maxsize=10000, ttl=timedelta(seconds=cache_timeout), timer=datetime.now)
 
@@ -102,10 +108,27 @@ class Connect(object):
             self._on_downgrade_message = func
 
     def request(self, msg):
+        connection_active = False
+        retries = 0
+        max_retries = 3
 
-        if not self._consumer or not self._consumer.active():
-            logger.warning("gRPC not Started.")
-            self.run()
+        while not connection_active and retries < max_retries:
+            try:
+                if not self._consumer or not self._consumer.active() or not self._rpc:
+                    logger.warning(
+                        f"gRPC not started or not active. Attempting to start... (retry {retries + 1}/{max_retries})")
+                    connection_active = self.run()
+                else:
+                    connection_active = True
+            except Exception as e:
+                logger.error(f"Failed to start connection (attempt {retries + 1}): {e}")
+                retries += 1
+                time.sleep(1)  # Increase retry interval
+
+        if not connection_active:
+            error_msg = "Failed to establish connection after multiple attempts"
+            logger.error(error_msg)
+            raise RuntimeError(error_msg)
 
         if msg.get_msg_type() == pb.Pong and hasattr(self._rpc, "pending_requests") \
                 and self._rpc.pending_requests > 2:
@@ -120,11 +143,49 @@ class Connect(object):
                 else:
                     raise ExitedException()
 
-        request = pb.ClientRequest(type=msg.get_msg_type(),
-                                   requestId=msg.get_request_id(),
-                                   path=msg.get_path(),
-                                   payload=msg.get_payload())
-        self._rpc.send(request)
+        # Ensure RPC instance exists
+        if self._rpc is None:
+            error_msg = "RPC instance is None even after initialization"
+            logger.error(error_msg)
+            raise RuntimeError(error_msg)
+
+        # Create client request
+        client_request = pb.ClientRequest(
+            type=msg.get_msg_type(),
+            requestId=msg.get_request_id(),
+            path=msg.get_path(),
+            payload=msg.get_payload()
+        )
+
+        # User ID has already been passed through metadata during connection setup, no need to set it separately for each request
+
+        # Send request
+        send_success = False
+        retries = 0
+        max_retries = 3
+        last_error = None
+
+        while not send_success and retries < max_retries:
+            try:
+                # Send request directly, user ID has been passed through metadata during connection setup
+                self._rpc.send(client_request)
+                send_success = True
+            except Exception as e:
+                last_error = e
+                # Try to reinitialize connection
+                logger.info(f"Attempting to reinitialize connection (attempt {retries + 1})...")
+                try:
+                    self.run()
+                    time.sleep(0.5)  # Give connection some time to establish
+                except Exception as conn_error:
+                    logger.error(f"Failed to reinitialize connection: {conn_error}")
+                retries += 1
+
+        if not send_success:
+            error_msg = f"Failed to send request after {max_retries} attempts. Last error: {last_error}"
+            logger.error(error_msg)
+            raise RuntimeError(error_msg)
+
         if msg.get_msg_type() == pb.Pong:
             return
         self._msg_cache[msg.get_request_id()] = msg
@@ -192,18 +253,71 @@ class Connect(object):
     def run(self):
         with self._run_mutex:
             if not self._consumer or not self._consumer.active():
-                initial_request = self._initial_request()
-                self._rpc = ResumableBidiRpc(self._app_key, self._app_secret, self._target,
-                                             '/openapi.Quote/StreamRequest',
-                                             self._stub.StreamRequest, self._should_recover,
-                                             initial_request=initial_request)
+                # Close any existing old connection resources
+                if self._consumer:
+                    self._consumer.stop()
+                if self._rpc:
+                    try:
+                        self._rpc.close()
+                    except:
+                        pass
+                self._consumer = None
+                self._rpc = None
 
-                self._rpc.add_done_callback(self.done_callback)
-                self._consumer = BackgroundConsumer(self._rpc, self._handle_response)
-                self._consumer.start(self._daemon)
-                with self._request_mutex:
-                    self._done = False
-                self._run_pong_task()
+                # Create new connection
+                try:
+                    initial_request = self._initial_request()
+                    self._rpc = ResumableBidiRpc(
+                        self._app_key,
+                        self._app_secret,
+                        self._target,
+                        '/openapi.Quote/StreamRequest',
+                        self._stub.StreamRequest,
+                        self._should_recover,
+                        initial_request=initial_request,
+                        user_id=self._user_id  # Pass user ID
+                    )
+
+                    self._rpc.add_done_callback(self.done_callback)
+
+                    self._consumer = BackgroundConsumer(self._rpc, self._handle_response)
+                    self._consumer.start(self._daemon)
+
+                    # Wait for connection to establish
+                    retry = 0
+                    max_retries = 5
+                    while retry < max_retries:
+                        if self._consumer.active() and self._rpc.is_active:
+                            logger.info("Connection successfully established")
+                            break
+                        time.sleep(0.5)
+                        retry += 1
+                        logger.debug(f"Waiting for connection... {retry}/{max_retries}")
+
+                    if not (self._consumer.active() and self._rpc.is_active):
+                        logger.error("Failed to establish connection after retries")
+                        raise RuntimeError("Failed to establish connection")
+
+                    with self._request_mutex:
+                        self._done = False
+                    self._run_pong_task()
+                    return True
+                except Exception as e:
+                    logger.error(f"Error establishing connection: {e}")
+                    if self._consumer:
+                        try:
+                            self._consumer.stop()
+                        except:
+                            pass
+                    if self._rpc:
+                        try:
+                            self._rpc.close()
+                        except:
+                            pass
+                    self._consumer = None
+                    self._rpc = None
+                    raise RuntimeError(f"Failed to establish connection: {e}")
+            return self._consumer.active() and self._rpc.is_active
 
     def stop(self):
         self._stop_pong_task()

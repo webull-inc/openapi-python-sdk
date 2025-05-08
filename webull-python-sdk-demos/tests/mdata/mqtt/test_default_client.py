@@ -14,6 +14,8 @@
 
 import unittest
 
+from webullsdkcore.common.customer_type import CustomerType
+from webullsdkcore.common.region import Region
 from webullsdkmdata.common.category import Category
 from webullsdkmdata.common.subscribe_type import SubscribeType
 from webullsdkmdata.quotes.subscribe.default_client import DefaultQuotesClient
@@ -27,7 +29,7 @@ region_id = '<region_id>'
 
 
 class TestDefaultQuotesClient(unittest.TestCase):
-    
+
     def test_default_quotes_client(self):
 
         def pt_logs(client, userdata, level, buf):
@@ -37,7 +39,7 @@ class TestDefaultQuotesClient(unittest.TestCase):
             print("Received message '" + str(message.payload) + "' on topic '"
                   + message.topic + "' with QoS " + str(message.qos))
 
-        client = DefaultQuotesClient(your_app_key, your_app_secret, 'hk', optional_quotes_endpoint)
+        client = DefaultQuotesClient(app_key=your_app_key, app_secret=your_app_secret, region_id=Region.HK.value, customer_type=CustomerType.INSTITUTION, host=optional_quotes_endpoint)
         client.init_default_settings('00700', Category.HK_STOCK.name, SubscribeType.SNAPSHOT.name)
         client.on_log = pt_logs
         client.on_message = on_message

@@ -27,14 +27,14 @@ from webullsdkmdata.quotes.grpc.response import Response
 
 
 class DefaultQuotesClient(QuotesClient):
-    def __init__(self, app_key, app_secret, region_id, host=None, tls_enable=True, transport="tcp",
+    def __init__(self, app_key, app_secret, region_id, customer_type=None, host=None, tls_enable=True, transport="tcp",
                  retry_policy=None):
         if region_id:
             super().__init__(app_key, app_secret, region_id, host,
-                             tls_enable=tls_enable,
+                             tls_enable=tls_enable, customer_type=customer_type,
                              transport=transport, retry_policy=retry_policy)
         else:
-            super().__init__(app_key, app_secret, host=host, tls_enable=tls_enable,
+            super().__init__(app_key, app_secret, host=host, tls_enable=tls_enable, customer_type=customer_type,
                              transport=transport, retry_policy=retry_policy)
         self._on_subscribe_success = None
 

@@ -14,10 +14,13 @@
 
 # coding=utf-8
 
+import asyncio
+import threading
 import time
 from webullsdkmdata.common.category import Category
 from webullsdkmdata.common.subscribe_type import SubscribeType
 from webullsdkmdata.quotes.subscribe.default_client import DefaultQuotesClient
+from webullsdkcore.common.customer_type import CustomerType
 
 if __name__ == '__main__':
     your_app_key = "<your_app_key>"
@@ -26,8 +29,16 @@ if __name__ == '__main__':
     region_id = '<region_id>'
     # not necessary in production env
     optional_quotes_grpc_endpoint = "<grpc_api_endpoint>"
+    
+    # Create retail client
     quotes_client = DefaultQuotesClient(
-        your_app_key, your_app_secret, region_id, api_endpoint=optional_quotes_grpc_endpoint)
+        app_key=your_app_key,
+        app_secret=your_app_secret,
+        region_id=region_id,
+        # customer_type=CustomerType.INDIVIDUAL,  # default value, can be omitted
+        host=optional_quotes_grpc_endpoint
+    )
+
     quotes_client.init_default_settings(["AAPL", "TSLA"], Category.US_STOCK.name, [
         SubscribeType.BASIC_QUOTE.name, SubscribeType.SNAPSHOT.name])
 
