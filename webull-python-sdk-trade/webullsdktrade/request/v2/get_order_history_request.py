@@ -17,7 +17,7 @@ from webullsdkcore.request import ApiRequest
 
 class OrderHistoryRequest(ApiRequest):
     def __init__(self):
-        ApiRequest.__init__(self, "/openapi/account/orders/history", version='v1', method="GET", body_params={})
+        ApiRequest.__init__(self, "/openapi/account/orders/history", version='v1', method="GET", query_params={})
 
     def set_account_id(self, account_id):
         self.add_query_param("account_id", account_id)
