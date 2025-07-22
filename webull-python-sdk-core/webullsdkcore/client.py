@@ -45,7 +45,6 @@ import logging
 import platform
 import json
 from webullsdkcore import compat
-from webullsdkcore.common.customer_type import CustomerType
 from webullsdkcore.exception import error_code
 from webullsdkcore.exception.exceptions import ClientException, ServerException
 from webullsdkcore.headers import WB_USER_ID
@@ -82,7 +81,6 @@ class ApiClient:
         region_id=DEFAULT_REGION_ID,
         user_agent=None,
         port=DEFAULT_PORT,
-        customer_type=CustomerType.INDIVIDUAL,
         connect_timeout=None,
         timeout=None,
         credential=None,
@@ -96,7 +94,6 @@ class ApiClient:
         self._region_id = region_id
         self._user_agent = user_agent
         self._port = port
-        self._customer_type = customer_type
         self._connect_timeout = connect_timeout
         self._read_timeout = timeout
         self._extra_user_agent = {}
@@ -130,9 +127,6 @@ class ApiClient:
     
     def get_verify(self):
         return self._verify
-
-    def set_customer_type(self):
-        return self._customer_type
 
     def set_user_id(self):
         return self._user_id
@@ -336,8 +330,7 @@ class ApiClient:
     
     def _resolve_endpoint(self, request):
         resolve_request = ResolveEndpointRequest(
-            self._region_id,
-            self._customer_type
+            self._region_id
         )
         return self._endpoint_resolver.resolve(resolve_request)
     

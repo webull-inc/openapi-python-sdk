@@ -69,7 +69,9 @@ class PlaceOrderRequest(ApiRequest):
                         order_type, limit_price, stop_price, trailing_type,trailing_stop_step):
         self._stock_order.update({k: v for k, v in locals().items() if v is not None and k != 'self'})
 
-
+    def set_custom_header(self, category):
+        if category is not None:
+            self.add_header("category", category)
 
 
 

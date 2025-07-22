@@ -58,3 +58,14 @@ class PlaceOrderRequest(ApiRequest):
             self._current_order = {}
         else:
             raise ValueError("No order fields have been set.")
+
+    def set_custom_header(self, new_orders):
+
+        if not new_orders:
+            return
+
+        if not isinstance(new_orders, (list, tuple)):
+            market = new_orders.get("market")
+            category = market + "_" + "STOCK"
+            if category is not None:
+                self.add_header("category", category)

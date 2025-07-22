@@ -41,6 +41,17 @@ message Bar {
     string volume = 6;
 }
 
+message BatchBarsRequest{
+  repeated string symbols = 1;
+  string category = 2;
+  string timespan = 3;
+  int32 count = 4;
+}
+
+message BatchBarsResponse {
+  repeated BarsResponse result = 1;
+}
+
 message SnapshotRequest {
     string symbols = 1;
     string category = 2;

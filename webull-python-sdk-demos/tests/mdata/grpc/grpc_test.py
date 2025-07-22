@@ -19,7 +19,6 @@ from webullsdkcore.common.region import Region
 from webullsdkmdata.quotes.grpc.market_data import MarketData
 from webullsdkmdata.quotes.grpc.instrument import Instrument
 from webullsdkquotescore.grpc.grpc_client import GrpcApiClient
-from webullsdkcore.common.customer_type import CustomerType
 from webullsdkquotescore.grpc.grpc_retry_policy import DefaultSubscribeRetryPolicy
 
 your_app_key = "</your_app_key>"
@@ -38,7 +37,6 @@ grpc_client = GrpcApiClient(
     host=optional_quotes_endpoint,
     port=443,
     tls_enable=True,
-    # customer_type=CustomerType.INSTITUTION
 )
 
 log_format = '%(thread)d %(asctime)s %(name)s %(levelname)s %(message)s'
@@ -63,6 +61,18 @@ if __name__ == "__main__":
 
         print('\nget_history_bar request', '*' * 20)
         res = market_data.get_history_bar('AAPL', 'US_STOCK', 'M1')
+        print(res.request_id)
+        print(res.status_code)
+        print(res.msg)
+        print(res.json())
+        print('get_history_bar request end', '*' * 20)
+        time.sleep(2)
+        # Process results...
+
+
+        print('\nget_history_bar request', '*' * 20)
+        symbols = ['AAPL', 'F']
+        res = market_data.get_batch_history_bar(symbols, 'US_STOCK', 'M1', count=1)
         print(res.request_id)
         print(res.status_code)
         print(res.msg)

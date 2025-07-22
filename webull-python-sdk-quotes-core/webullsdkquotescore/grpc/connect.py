@@ -23,7 +23,6 @@ import time
 from webullsdkcore import compat
 import webullsdkquotescore
 from webullsdkcore.cache import MsgCache
-from webullsdkcore.common.customer_type import CustomerType
 from webullsdkquotescore.exceptions import ExitedException
 from webullsdkquotescore.grpc.core import ResumableBidiRpc, BackgroundConsumer
 from webullsdkquotescore.grpc.error import ExceptionContext
@@ -44,7 +43,6 @@ class Connect(object):
                  region_id=None,
                  host=None,
                  port=443,
-                 customer_type=CustomerType.INDIVIDUAL,
                  cache_timeout=120,
                  tls_enable=True,
                  retry_policy=None,
@@ -55,7 +53,6 @@ class Connect(object):
         self._on_downgrade_message = None
         self._app_key = app_key
         self._app_secret = app_secret
-        self._customer_type = customer_type
         self._region_id = region_id
         self._tls_enable = tls_enable
         self._host = host
@@ -338,3 +335,7 @@ class Connect(object):
         if self._channel:
             self._channel.close()
             self._channel = None
+
+    def set_user_id(self, user_id):
+        if not self._user_id:
+            self._user_id = user_id

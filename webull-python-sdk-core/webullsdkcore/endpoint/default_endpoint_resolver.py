@@ -45,12 +45,11 @@ from webullsdkcore.endpoint.local_config_regional_endpoint_resolver import Local
 from webullsdkcore.endpoint.user_customized_endpoint_resolver import UserCustomizedEndpointResolver
 
 class DefaultEndpointResolver(EndpointResolver):
-    def __init__(self, customer_type, user_config=None):
-        self._customer_type = customer_type
+    def __init__(self, user_config=None):
         self._user_customized_endpoint_resolver = UserCustomizedEndpointResolver()
         endpoint_resolvers = [
             self._user_customized_endpoint_resolver,
-            LocalConfigRegionalEndpointResolver(user_config, customer_type=self._customer_type)
+            LocalConfigRegionalEndpointResolver()
         ] 
         self._resolver = ChainedEndpointResolver(endpoint_resolvers)
 

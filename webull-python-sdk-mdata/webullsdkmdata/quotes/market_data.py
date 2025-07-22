@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+from webullsdkmdata.request.get_batch_historical_bars_request import BatchHistoricalBarsRequest
 from webullsdkmdata.request.get_historical_bars_request import GetHistoricalBarsRequest
 from webullsdkmdata.request.get_snapshot_request import GetSnapshotRequest
 from webullsdkmdata.request.get_eod_bars_request import GetEodBarsRequest
@@ -37,6 +37,26 @@ class MarketData:
         """
         history_bar_request = GetHistoricalBarsRequest()
         history_bar_request.set_symbol(symbol)
+        history_bar_request.set_category(category)
+        history_bar_request.set_timespan(timespan)
+        history_bar_request.set_count(count)
+        response = self.client.get_response(history_bar_request)
+        return response
+
+    def get_batch_history_bar(self, symbols, category, timespan, count='200'):
+        """
+        Batch query K-line data for multiple symbols, returning aggregated data within the window.
+        According to the last N K-lines of the stock code, it supports various granularity K-lines such as m1 and m5.
+        Currently, only the K-line with the previous weight is provided for the daily K-line and above,
+        and only the un-weighted K-line is provided for the minute K.
+
+        :param symbols: List of security codes
+        :param category: Security type, enumeration
+        :param timespan: K-line interval
+        :param count: Number of K-lines to return, default is 200, maximum is 1200
+        """
+        history_bar_request = BatchHistoricalBarsRequest()
+        history_bar_request.set_symbols(symbols)
         history_bar_request.set_category(category)
         history_bar_request.set_timespan(timespan)
         history_bar_request.set_count(count)

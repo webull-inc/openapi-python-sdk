@@ -14,6 +14,7 @@
 
 from webullsdkmdata.quotes.grpc.pb import quote_pb2
 from webullsdkmdata.quotes.grpc.response import Response
+from webullsdkmdata.request.grpc.get_batch_historical_bars_request import GetBatchHistoricalBarsRequest
 from webullsdkmdata.request.grpc.get_historical_bars_request import GetHistoricalBarsRequest
 from webullsdkmdata.request.grpc.get_quote_request import GetQuoteRequest
 from webullsdkmdata.request.grpc.get_snapshot_request import GetSnapshotRequest
@@ -85,6 +86,22 @@ class MarketData:
         request = GetHistoricalBarsRequest(symbol, category, timespan, count)
         result = self.client.get_response(request.get_path(), request.serialize())
         return Response(result, quote_pb2.BarsResponse())
+
+    def get_batch_history_bar(self, symbols, category, timespan, count=200):
+        """
+        Batch query K-line data for multiple symbols, returning aggregated data within the window.
+        According to the last N K-lines of the stock code, it supports various granularity K-lines such as m1 and m5.
+        Currently, only the K-line with the previous weight is provided for the daily K-line and above,
+        and only the un-weighted K-line is provided for the minute K.
+
+        :param symbols: List of security codes
+        :param category: Security type, enumeration
+        :param timespan: K-line interval
+        :param count: Number of K-lines to return, default is 200, maximum is 1200
+        """
+        request = GetBatchHistoricalBarsRequest(symbols, category, timespan, count)
+        result = self.client.get_response(request.get_path(), request.serialize())
+        return Response(result, quote_pb2.BatchBarsResponse())
 
     def get_quote(self, symbol, category):
         """

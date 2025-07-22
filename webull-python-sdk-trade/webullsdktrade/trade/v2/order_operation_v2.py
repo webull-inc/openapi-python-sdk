@@ -50,6 +50,7 @@ class OrderOperationV2:
         place_order_req.set_account_id(account_id)
         place_order_req.set_new_orders(new_orders)
         place_order_req.finalize_order()
+        place_order_req.set_custom_header(new_orders)
         response = self.client.get_response(place_order_req)
         return response
 
@@ -151,6 +152,7 @@ class OrderOperationV2:
         place_option_request = PlaceOptionRequest()
         place_option_request.set_new_orders(new_orders)
         place_option_request.set_account_id(account_id)
+        place_option_request.set_custom_header(new_orders)
         response = self.client.get_response(place_option_request)
         return response
 

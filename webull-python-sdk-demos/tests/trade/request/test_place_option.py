@@ -61,6 +61,7 @@ class TestOptionOperation(unittest.TestCase):
         request.set_endpoint(optional_api_endpoint)
         request.set_account_id(account_id)
         request.set_new_orders(new_orders)
+        request.set_custom_header(new_orders)
         post_body = request.get_body_params()
         print(json.dumps(post_body, indent=4))
         params = request.get_query_params()
