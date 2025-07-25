@@ -38,6 +38,13 @@ class PlaceOrderRequestV2(ApiRequest):
         if 'close_contracts' in stock_order and stock_order['close_contracts'] is not None:
             self.set_close_contracts(stock_order['close_contracts'])
 
+    def set_custom_header(self, stock_order):
+        if stock_order is not None :
+            category = stock_order.get('category')
+            print("category is ", category)
+            if category is not None:
+                print("header category is ", category)
+                self.add_header("category", category)
 
 
 

@@ -41,7 +41,6 @@ which was part of Alibaba Group.
 
 from webullsdkcore.common.api_type import DEFAULT as HTTP_API_TYPE
 class ResolveEndpointRequest(object):
-    def __init__(self, region_id=None, customer_type=None, api_type=HTTP_API_TYPE):
+    def __init__(self, region_id=None, api_type=HTTP_API_TYPE):
         self.region_id = region_id
         self.api_type = api_type
-        self.customer_type = customer_type

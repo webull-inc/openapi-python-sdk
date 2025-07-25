@@ -16,8 +16,9 @@ import unittest
 import uuid
 from time import sleep
 
+from webullsdkmdata.common.category import Category
+
 from webullsdkcore.client import ApiClient
-from webullsdkcore.common.customer_type import CustomerType
 from webullsdkcore.common.region import Region
 from webullsdktrade.api import API
 
@@ -31,7 +32,6 @@ api_client = ApiClient(
     app_key=your_app_key,
     app_secret=your_app_secret,
     region_id=region_id,
-    # customer_type=CustomerType.INSTITUTION
 )
 api_client.add_endpoint(region_id, optional_api_endpoint)
 
@@ -171,3 +171,27 @@ class TestApi(unittest.TestCase):
         res = api.order_v2.cancel_option(account_id, client_order_id)
         if res.status_code == 200:
             print("cancel option=" + json.dumps(res.json(), indent=4))
+        res = api.market_data.get_batch_history_bar(
+            symbols=['AAPL', 'TSLA'],
+            category=Category.US_STOCK.name,
+            timespan='M1',
+            count=1
+        )
+        if res.status_code == 200:
+            print('us batch history bar:', res.json())
+        res = api.market_data.get_batch_history_bar(
+            symbols=['00700', '00981'],
+            category=Category.HK_STOCK.name,
+            timespan='M1',
+            count=1
+        )
+        if res.status_code == 200:
+            print('hk batch history bar:', res.json())
+        res = api.market_data.get_batch_history_bar(
+            symbols=['600000', '600519'],
+            category=Category.CN_STOCK.name,
+            timespan='M1',
+            count=1
+        )
+        if res.status_code == 200:
+            print('cn batch history bar:', res.json())

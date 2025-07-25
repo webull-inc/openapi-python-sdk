@@ -3,35 +3,20 @@
     "regions": ["us", "hk", "jp"],
     "region_mapping": {
         "us": {
-            "individual": {
-                "api": "api.webull.com",
-                "quotes-api": "usquotes-api.webullfintech.com",
-                "events-api": "events-api.webull.com"
-            },
-            "institution": {
-                "api": "",
-                "quotes-api": "",
-                "events-api": ""
-            }
+            "api": "api.webull.com",
+            "quotes-api": "usquotes-api.webullfintech.com",
+            "events-api": "events-api.webull.com"
         },
         "hk": {
-            "individual": {
-                "api": "api.webull.hk",
-                "quotes-api": "quotes-api.webull.hk",
-                "events-api": "events-api.webull.hk"
-            },
-            "institution": {
-                "api": "inst-api.webull.hk",
-                "quotes-api": "quotes-api.webull.hk",
-                "events-api": "events-inst-api.webull.hk"
-            }
+            "api": "api.webull.hk",
+            "quotes-api": "quotes-api.webull.hk",
+            "events-api": "events-api.webull.hk"
         },
         "jp": {
-            "individual": {
-                "api": "api.webull.co.jp",
-                "quotes-api": "",
-                "events-api": "events-api.webull.co.jp"
-            }
+            "api": "api.webull.co.jp",
+            "quotes-api": "",
+            "events-api": "events-api.webull.co.jp"
         }
     }
 }
+

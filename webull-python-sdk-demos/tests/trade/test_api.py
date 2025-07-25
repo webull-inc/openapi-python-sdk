@@ -76,6 +76,30 @@ class TestApi(unittest.TestCase):
         res = api.market_data.get_history_bar('600000', 'CN_STOCK', 'M1')
         if res.status_code == 200:
             print('cn stock quote:', res.json())
+        res = api.market_data.get_batch_history_bar(
+            symbols=['AAPL', 'TSLA'],
+            category=Category.US_STOCK.name,
+            timespan='M1',
+            count=1
+        )
+        if res.status_code == 200:
+            print('us batch history bar:', res.json())
+        res = api.market_data.get_batch_history_bar(
+            symbols=['00700', '00981'],
+            category=Category.HK_STOCK.name,
+            timespan='M1',
+            count=1
+        )
+        if res.status_code == 200:
+            print('hk batch history bar:', res.json())
+        res = api.market_data.get_batch_history_bar(
+            symbols=['600000', '600519'],
+            category=Category.CN_STOCK.name,
+            timespan='M1',
+            count=1
+        )
+        if res.status_code == 200:
+            print('cn batch history bar:', res.json())
         res = api.market_data.get_eod_bar(instrument_ids='913303964', count=10)
         if res.status_code == 200:
             print('eod bar quote:', res.json())

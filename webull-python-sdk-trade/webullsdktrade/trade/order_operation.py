@@ -33,7 +33,7 @@ class OrderOperation:
 
     def place_order(self, account_id, qty, instrument_id, side, client_order_id, order_type,
                     extended_hours_trading, tif, limit_price=None, stop_price=None,
-                    trailing_type=None, trailing_stop_step=None):
+                    trailing_type=None, trailing_stop_step=None, category=None):
         """
         This interface is used by customers in Hong Kong to place orders, and supports placing orders in two markets:
         Hong Kong stocks, and A shares (China Connect).
@@ -60,6 +60,7 @@ class OrderOperation:
                                             side=side, tif=tif, extended_hours_trading=extended_hours_trading,
                                             order_type=order_type, limit_price=limit_price, stop_price=stop_price,
                                             trailing_type=trailing_type, trailing_stop_step=trailing_stop_step)
+        place_order_request.set_custom_header(category)
         response = self.client.get_response(place_order_request)
         return response
 
@@ -98,6 +99,7 @@ class OrderOperation:
         place_order_request = PlaceOrderRequestV2()
         place_order_request.set_account_id(account_id)
         place_order_request.set_stock_order(stock_order)
+        place_order_request.set_custom_header(stock_order)
         response = self.client.get_response(place_order_request)
         return response
 
@@ -193,6 +195,7 @@ class OrderOperation:
         place_option_request = PlaceOptionRequest()
         place_option_request.set_new_orders(new_orders)
         place_option_request.set_account_id(account_id)
+        place_option_request.set_custom_header(new_orders)
         response = self.client.get_response(place_option_request)
         return response
 

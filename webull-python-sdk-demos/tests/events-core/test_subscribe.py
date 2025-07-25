@@ -14,7 +14,6 @@
 
 import unittest
 
-from webullsdkcore.common.customer_type import CustomerType
 from webullsdktrade.events.types import ORDER_STATUS_CHANGED, EVENT_TYPE_ORDER
 from webullsdktradeeventscore.events_client import EventsClient
 
@@ -22,7 +21,6 @@ your_app_key = "<your_app_key>"
 your_app_secret = "<your_app_secret>"
 account_id = "<your_account_id>"
 region_id = "hk"
-customer_type = CustomerType.INSTITUTION
 
 endpoint = "<event_api_endpoint>"
 
@@ -30,9 +28,9 @@ endpoint = "<event_api_endpoint>"
 class TestGrpcSubscribe(unittest.TestCase):
     def test_subscribe(self):
         # Create EventsClient instance
-        events_client = EventsClient(your_app_key, your_app_secret, region_id, customer_type=customer_type)
+        events_client = EventsClient(your_app_key, your_app_secret, region_id)
         # For non production environment, you need to set the domain name of the subscription service through eventsclient. For example, the domain name of the UAT environment is set here
-        # events_client = EventsClient(your_app_key, your_app_secret, region_id, host=endpoint, customer_type=customer_type)
+        # events_client = EventsClient(your_app_key, your_app_secret, region_id, host=endpoint)
 
         # Set the callback function when the event data is received.
         # The data of order status change is printed here

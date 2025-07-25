@@ -29,7 +29,6 @@ from webullsdkquotescore.grpc import error
 from webullsdkquotescore.grpc.connect import Connect
 from webullsdkquotescore.grpc.msg import Msg
 from webullsdkquotescore.grpc.pb import gateway_pb2 as pb
-from webullsdkcore.common.customer_type import CustomerType
 
 DEFAULT_REGION_ID = "us"
 logger = logging.getLogger(__name__)
@@ -52,7 +51,6 @@ class GrpcApiClient(object):
                  retry_policy=None,
                  daemon=False,
                  downgrade_message=None,
-                 customer_type=CustomerType.INDIVIDUAL,
                  user_id=None):
 
         # Initialize user ID
@@ -70,12 +68,10 @@ class GrpcApiClient(object):
                 if not hasattr(self, '_connect'):
                     self.read_timeout = read_timeout
                     self._retry_policy = retry_policy if retry_policy else DefaultSubscribeRetryPolicy()
-                    self._customer_type = customer_type
 
                     def _provide_endpoint():
                         endpoint_resolver = DefaultEndpointResolver(self)
-                        endpoint_request = ResolveEndpointRequest(region_id=region_id, customer_type=customer_type,
-                                                                  api_type=api_type.QUOTES)
+                        endpoint_request = ResolveEndpointRequest(region_id=region_id, api_type=api_type.QUOTES)
                         return endpoint_resolver.resolve(endpoint_request)
 
                     self._host = host if host is not None else _provide_endpoint()
@@ -86,7 +82,6 @@ class GrpcApiClient(object):
                         region_id=region_id,
                         host=self._host,
                         port=port,
-                        customer_type=customer_type,
                         cache_timeout=cache_timeout,
                         tls_enable=tls_enable,
                         retry_policy=self._retry_policy,
@@ -128,11 +123,10 @@ class GrpcApiClient(object):
                     region_id=getattr(self, '_region_id', DEFAULT_REGION_ID),
                     host=self._host,
                     port=getattr(self, '_port', 443),
-                    customer_type=self._customer_type,
                     cache_timeout=getattr(self, '_cache_timeout', 120),
                     tls_enable=getattr(self, '_tls_enable', True),
                     retry_policy=self._retry_policy,
-                    daemon=getattr(self, '_daemon', False)
+                    daemon=getattr(self, '_daemon', False),
                 )
                 # Set user ID
                 self._connect.set_user_id(user_id)
@@ -184,6 +178,3 @@ class GrpcApiClient(object):
         formatter = logging.Formatter(format_string)
         fh.setFormatter(formatter)
         log.addHandler(fh)
-
-    def set_customer_type(self):
-        return self._customer_type

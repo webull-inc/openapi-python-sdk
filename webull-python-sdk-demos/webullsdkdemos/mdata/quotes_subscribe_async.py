@@ -20,7 +20,6 @@ import time
 from webullsdkmdata.common.category import Category
 from webullsdkmdata.common.subscribe_type import SubscribeType
 from webullsdkmdata.quotes.subscribe.default_client import DefaultQuotesClient
-from webullsdkcore.common.customer_type import CustomerType
 
 if __name__ == '__main__':
     your_app_key = "<your_app_key>"
@@ -35,7 +34,6 @@ if __name__ == '__main__':
         app_key=your_app_key,
         app_secret=your_app_secret,
         region_id=region_id,
-        # customer_type=CustomerType.INDIVIDUAL,  # default value, can be omitted
         host=optional_quotes_grpc_endpoint
     )
 
