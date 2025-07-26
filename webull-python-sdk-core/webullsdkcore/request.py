@@ -257,8 +257,7 @@ class ApiRequest(BaseRequest):
         if version is not None:
             self.add_header(hd.VERSION, version)
         self._signer_spec = signer_spec
-        if body_params is not None:
-            self.set_body_params(body_params)
+        self.set_body_params(body_params)
 
     def get_signed_header(self, host, app_key, app_secret):
         sc.calc_signature(self._header, host, self._action_name, self._params, self._body_params, app_key, app_secret, self._signer_spec)
