@@ -17,7 +17,7 @@ from webullsdkcore.request import ApiRequest
 
 class BatchHistoricalBarsRequest(ApiRequest):
     def __init__(self):
-        ApiRequest.__init__(self, "/market-data/batch-bars", version='v1', method="POST")
+        ApiRequest.__init__(self, "/market-data/batch-bars", version='v1', method="POST", body_params={})
 
     def set_symbols(self, symbol):
         self.add_body_params("symbols", symbol)
