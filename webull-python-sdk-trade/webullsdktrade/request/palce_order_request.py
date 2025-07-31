@@ -14,7 +14,9 @@
 
 # coding=utf-8
 import inspect
+import json
 
+from webullsdkcore.context.request_context_holder import RequestContextHolder
 from webullsdkcore.request import ApiRequest
 
 class PlaceOrderRequest(ApiRequest):
@@ -69,12 +71,21 @@ class PlaceOrderRequest(ApiRequest):
                         order_type, limit_price, stop_price, trailing_type,trailing_stop_step):
         self._stock_order.update({k: v for k, v in locals().items() if v is not None and k != 'self'})
 
-    def set_custom_header(self, category):
-        if category is not None:
-            self.add_header("category", category)
+    def add_custom_headers_from_context(self):
+        try:
+            headers_map = RequestContextHolder.get()
+            if not headers_map:
+                return
+            for key, value in headers_map.items():
+                self.add_header(key, value)
+        finally:
+            RequestContextHolder.clear()
 
-
-
+    def add_custom_headers(self, headers_map):
+        if not headers_map:
+            return
+        for key, value in headers_map.items():
+            self.add_header(key, value)
 
 
 

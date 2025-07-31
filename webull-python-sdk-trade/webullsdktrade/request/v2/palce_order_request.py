@@ -15,6 +15,7 @@ import json
 # coding=utf-8
 from typing import List
 
+from webullsdkcore.context.request_context_holder import RequestContextHolder
 from webullsdkcore.request import ApiRequest
 
 
@@ -59,8 +60,7 @@ class PlaceOrderRequest(ApiRequest):
         else:
             raise ValueError("No order fields have been set.")
 
-    def set_custom_header(self, new_orders):
-
+    def add_custom_headers_from_order(self, new_orders):
         if not new_orders:
             return
 
@@ -69,3 +69,19 @@ class PlaceOrderRequest(ApiRequest):
             category = market + "_" + "STOCK"
             if category is not None:
                 self.add_header("category", category)
+
+    def add_custom_headers_from_context(self):
+        try:
+            headers_map = RequestContextHolder.get()
+            if not headers_map:
+                return
+            for key, value in headers_map.items():
+                self.add_header(key, value)
+        finally:
+            RequestContextHolder.clear()
+
+    def add_custom_headers(self, headers_map):
+        if not headers_map:
+            return
+        for key, value in headers_map.items():
+            self.add_header(key, value)

@@ -12,16 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # coding=utf-8
+from webullsdkcore.context.request_context_holder import RequestContextHolder
+from webullsdktrade.request.v2.cancel_option_request import CancelOptionRequest
 from webullsdktrade.request.v2.cancel_order_request import CancelOrderRequest
 from webullsdktrade.request.v2.get_order_detail_request import OrderDetailRequest
 from webullsdktrade.request.v2.get_order_history_request import OrderHistoryRequest
 from webullsdktrade.request.v2.palce_order_request import PlaceOrderRequest
-from webullsdktrade.request.v2.preview_order_request import PreviewOrderRequest
-from webullsdktrade.request.v2.replace_order_request import ReplaceOrderRequest
-from webullsdktrade.request.v2.cancel_option_request import CancelOptionRequest
-from webullsdktrade.request.v2.replace_option_request import ReplaceOptionRequest
 from webullsdktrade.request.v2.place_option_request import PlaceOptionRequest
 from webullsdktrade.request.v2.preview_option_request import PreviewOptionRequest
+from webullsdktrade.request.v2.preview_order_request import PreviewOrderRequest
+from webullsdktrade.request.v2.replace_option_request import ReplaceOptionRequest
+from webullsdktrade.request.v2.replace_order_request import ReplaceOrderRequest
+
 
 class OrderOperationV2:
     def __init__(self, api_client):
@@ -50,7 +52,8 @@ class OrderOperationV2:
         place_order_req.set_account_id(account_id)
         place_order_req.set_new_orders(new_orders)
         place_order_req.finalize_order()
-        place_order_req.set_custom_header(new_orders)
+        place_order_req.add_custom_headers_from_order(new_orders)
+        place_order_req.add_custom_headers_from_context()
         response = self.client.get_response(place_order_req)
         return response
 
@@ -152,7 +155,8 @@ class OrderOperationV2:
         place_option_request = PlaceOptionRequest()
         place_option_request.set_new_orders(new_orders)
         place_option_request.set_account_id(account_id)
-        place_option_request.set_custom_header(new_orders)
+        place_option_request.add_custom_headers_from_order(new_orders)
+        place_option_request.add_custom_headers_from_context()
         response = self.client.get_response(place_option_request)
         return response
 
@@ -179,3 +183,24 @@ class OrderOperationV2:
         cancel_option_request.set_account_id(account_id)
         response = self.client.get_response(cancel_option_request)
         return response
+
+    def add_custom_headers(self, headers_map: dict):
+        """
+        This is an optional feature; you can still make a request without setting it.
+        If set, you can specify certain headers to perform specific operations.
+        Note: If you set a header, call remove_custom_headers to clean up the header after the request is completed.
+
+        Currently supported header keys and functions:
+            Key：category {See Also: category}
+            Function: Frequency limit rules, please refer to the document for details. currently only supports Hong Kong
+        """
+        if not headers_map or len(headers_map) == 0:
+            return
+
+        RequestContextHolder.get().update(headers_map)
+
+    def remove_custom_headers(self):
+        """
+        Clearing headers after the request is completed.
+        """
+        RequestContextHolder.clear()

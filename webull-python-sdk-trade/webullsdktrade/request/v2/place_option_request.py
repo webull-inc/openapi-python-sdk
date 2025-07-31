@@ -11,7 +11,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import json
 
+from webullsdkcore.context.request_context_holder import RequestContextHolder
 # coding=utf-8
 
 from webullsdkcore.request import ApiRequest
@@ -27,7 +29,7 @@ class PlaceOptionRequest(ApiRequest):
     def set_account_id(self, account_id):
         self.add_query_param("account_id", account_id)
 
-    def set_custom_header(self, new_orders):
+    def add_custom_headers_from_order(self, new_orders):
 
         if not new_orders:
             return
@@ -40,8 +42,23 @@ class PlaceOptionRequest(ApiRequest):
                     if (sub_order and isinstance(sub_order, dict)
                             and sub_order.get("instrument_type") == "OPTION"):
                         instrument_type = sub_order.get("instrument_type")
-                        option_type = sub_order.get("option_type")
                         market = sub_order.get("market")
-                        category = market + "_" + "EQUITY" + "_" + option_type + "_" + instrument_type
+                        category = market + "_" + instrument_type
                         if category is not None:
                             self.add_header("category", category)
+
+    def add_custom_headers_from_context(self):
+        try:
+            headers_map = RequestContextHolder.get()
+            if not headers_map:
+                return
+            for key, value in headers_map.items():
+                self.add_header(key, value)
+        finally:
+            RequestContextHolder.clear()
+
+    def add_custom_headers(self, headers_map):
+        if not headers_map:
+            return
+        for key, value in headers_map.items():
+            self.add_header(key, value)

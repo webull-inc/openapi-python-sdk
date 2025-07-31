@@ -16,6 +16,7 @@ import unittest
 import uuid
 
 from webullsdkcore.client import ApiClient
+from webullsdkmdata.common.category import Category
 
 from webullsdktrade.trade.order_operation import OrderOperation
 
@@ -44,7 +45,12 @@ class TestorderOperation(unittest.TestCase):
                 "extended_hours_trading": False,
             }
         }
-        res = order_operation.place_order(account_id, stock_order['stock_order'])
+
+        # This is an optional feature; you can still make a request without setting it.
+        custom_headers_map = {"category": Category.US_STOCK.name}
+        order_operation.add_custom_headers(custom_headers_map)
+        res = order_operation.place_order(account_id, **stock_order['stock_order'])
+        order_operation.remove_custom_headers()
         if res.status_code == 200:
             print('place order status:', res.json())
 

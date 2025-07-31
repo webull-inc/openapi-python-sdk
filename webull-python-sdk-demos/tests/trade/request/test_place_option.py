@@ -17,6 +17,7 @@ import uuid
 
 from webullsdkcore.client import ApiClient
 from webullsdkcore.exception.exceptions import ServerException
+from webullsdkmdata.common.category import Category
 from webullsdktrade.request.v2.place_option_request import PlaceOptionRequest
 
 optional_api_endpoint = "<api_endpoint>"
@@ -61,11 +62,14 @@ class TestOptionOperation(unittest.TestCase):
         request.set_endpoint(optional_api_endpoint)
         request.set_account_id(account_id)
         request.set_new_orders(new_orders)
-        request.set_custom_header(new_orders)
         post_body = request.get_body_params()
         print(json.dumps(post_body, indent=4))
         params = request.get_query_params()
         print(params)
+
+        # This is an optional feature; you can still make a request without setting it.
+        custom_headers_map = {"category": Category.US_OPTION.name}
+        request.add_custom_headers(custom_headers_map)
 
         try:
             response = api_client.get_response(request)
