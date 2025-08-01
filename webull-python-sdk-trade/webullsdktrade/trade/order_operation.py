@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+from webullsdkcore.context.request_context_holder import RequestContextHolder
 # coding=utf-8
 from webullsdktrade.request.cancel_order_request import CancelOrderRequest
 from webullsdktrade.request.get_open_orders_request import OpenOrdersListRequest
@@ -33,7 +33,7 @@ class OrderOperation:
 
     def place_order(self, account_id, qty, instrument_id, side, client_order_id, order_type,
                     extended_hours_trading, tif, limit_price=None, stop_price=None,
-                    trailing_type=None, trailing_stop_step=None, category=None):
+                    trailing_type=None, trailing_stop_step=None):
         """
         This interface is used by customers in Hong Kong to place orders, and supports placing orders in two markets:
         Hong Kong stocks, and A shares (China Connect).
@@ -60,7 +60,7 @@ class OrderOperation:
                                             side=side, tif=tif, extended_hours_trading=extended_hours_trading,
                                             order_type=order_type, limit_price=limit_price, stop_price=stop_price,
                                             trailing_type=trailing_type, trailing_stop_step=trailing_stop_step)
-        place_order_request.set_custom_header(category)
+        place_order_request.add_custom_headers_from_context()
         response = self.client.get_response(place_order_request)
         return response
 
@@ -99,7 +99,7 @@ class OrderOperation:
         place_order_request = PlaceOrderRequestV2()
         place_order_request.set_account_id(account_id)
         place_order_request.set_stock_order(stock_order)
-        place_order_request.set_custom_header(stock_order)
+        place_order_request.add_custom_headers_from_context()
         response = self.client.get_response(place_order_request)
         return response
 
@@ -195,7 +195,8 @@ class OrderOperation:
         place_option_request = PlaceOptionRequest()
         place_option_request.set_new_orders(new_orders)
         place_option_request.set_account_id(account_id)
-        place_option_request.set_custom_header(new_orders)
+        place_option_request.add_custom_headers_from_order(new_orders)
+        place_option_request.add_custom_headers_from_context()
         response = self.client.get_response(place_option_request)
         return response
 
@@ -222,3 +223,24 @@ class OrderOperation:
         cancel_option_request.set_account_id(account_id)
         response = self.client.get_response(cancel_option_request)
         return response
+
+    def add_custom_headers(self, headers_map: dict):
+        """
+        This is an optional feature; you can still make a request without setting it.
+        If set, you can specify certain headers to perform specific operations.
+        Note: If you set a header, call remove_custom_headers to clean up the header after the request is completed.
+
+        Currently supported header keys and functions:
+            Key：category {See Also: category}
+            Function: Frequency limit rules, please refer to the document for details. currently only supports Hong Kong
+        """
+        if not headers_map or len(headers_map) == 0:
+            return
+
+        RequestContextHolder.get().update(headers_map)
+
+    def remove_custom_headers(self):
+        """
+        Clearing headers after the request is completed.
+        """
+        RequestContextHolder.clear()

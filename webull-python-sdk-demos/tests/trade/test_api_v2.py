@@ -86,7 +86,12 @@ class TestApi(unittest.TestCase):
             #     {"party_id":"BNG144.666555","party_id_source":"D","party_role":"3"}
             # ]
         }
+
+        # This is an optional feature; you can still make a request without setting it.
+        custom_headers_map = {"category": Category.US_STOCK.name}
+        api.order_v2.add_custom_headers(custom_headers_map)
         res = api.order_v2.place_order(account_id=account_id, new_orders=new_orders)
+        api.order_v2.remove_custom_headers()
         if res.status_code == 200:
             print("place_order_res=" + json.dumps(res.json(), indent=4))
         sleep(5)
@@ -158,7 +163,12 @@ class TestApi(unittest.TestCase):
             print("preview option=" + json.dumps(res.json(), indent=4))
         sleep(5)
         # place
+
+        # This is an optional feature; you can still make a request without setting it.
+        custom_headers_map = {"category": Category.US_OPTION.name}
+        api.order_v2.add_custom_headers(custom_headers_map)
         res = api.order_v2.place_option(account_id, option_new_orders)
+        api.order_v2.remove_custom_headers()
         if res.status_code == 200:
             print("place option=" + json.dumps(res.json(), indent=4))
         sleep(5)

@@ -16,7 +16,9 @@ import unittest
 import uuid
 
 from webullsdkcore.client import ApiClient
+from webullsdkcore.context.request_context_holder import RequestContextHolder
 from webullsdkcore.exception.exceptions import ServerException
+from webullsdkmdata.common.category import Category
 from webullsdktrade.request.v2.palce_order_request import PlaceOrderRequest
 
 optional_api_endpoint = "<api_endpoint>"
@@ -30,17 +32,16 @@ api_client.add_endpoint(region_id, optional_api_endpoint)
 client_order_id = uuid.uuid4().hex
 new_orders = {
     "client_order_id": client_order_id,
-    "symbol": "7011",
+    "symbol": "AAPL",
     "instrument_type": "EQUITY",
-    "market": "JP",
+    "market": "US",
     "order_type": "LIMIT",
-    "limit_price": "2080",
-    "quantity": "100",
+    "limit_price": "196",
+    "quantity": "1",
     "support_trading_session": "N",
     "side": "BUY",
     "time_in_force": "DAY",
-    "entrust_type": "QTY",
-    "account_tax_type": "GENERAL"
+    "entrust_type": "QTY"
 }
 
 
@@ -50,12 +51,15 @@ class TestOrderOperation(unittest.TestCase):
         request.set_endpoint(optional_api_endpoint)
         request.set_account_id(account_id)
         request.set_new_orders(new_orders)
-        request.set_custom_header(new_orders)
         request.finalize_order()
         post_body = request.get_body_params()
         print(json.dumps(post_body, indent=4))
         params = request.get_query_params()
         print(params)
+
+        # This is an optional feature; you can still make a request without setting it.
+        custom_headers_map = {"category": Category.US_STOCK.name}
+        request.add_custom_headers(custom_headers_map)
 
         try:
             response = api_client.get_response(request)

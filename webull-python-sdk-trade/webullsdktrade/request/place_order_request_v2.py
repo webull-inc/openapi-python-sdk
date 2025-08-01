@@ -13,8 +13,8 @@
 # limitations under the License.
 
 # coding=utf-8
-import inspect
 
+from webullsdkcore.context.request_context_holder import RequestContextHolder
 from webullsdkcore.request import ApiRequest
 
 class PlaceOrderRequestV2(ApiRequest):
@@ -38,17 +38,21 @@ class PlaceOrderRequestV2(ApiRequest):
         if 'close_contracts' in stock_order and stock_order['close_contracts'] is not None:
             self.set_close_contracts(stock_order['close_contracts'])
 
-    def set_custom_header(self, stock_order):
-        if stock_order is not None :
-            category = stock_order.get('category')
-            print("category is ", category)
-            if category is not None:
-                print("header category is ", category)
-                self.add_header("category", category)
+    def add_custom_headers_from_context(self):
+        try:
+            headers_map = RequestContextHolder.get()
+            if not headers_map:
+                return
+            for key, value in headers_map.items():
+                self.add_header(key, value)
+        finally:
+            RequestContextHolder.clear()
 
-
-
-
+    def add_custom_headers(self, headers_map):
+        if not headers_map:
+            return
+        for key, value in headers_map.items():
+            self.add_header(key, value)
 
 
 

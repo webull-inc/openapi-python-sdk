@@ -16,6 +16,7 @@ import unittest
 
 from webullsdkcore.client import ApiClient
 from webullsdkcore.exception.exceptions import ServerException
+from webullsdkmdata.common.category import Category
 from webullsdktrade.request.palce_order_request import PlaceOrderRequest
 
 
@@ -58,6 +59,10 @@ class TestOrderOperation(unittest.TestCase):
         print(params)
         # request.set_trailing_type(stock_order['stock_order']['trailing_type'])
         # request.set_trailing_stop_step(stock_order['stock_order']['trailing_stop_step'])
+
+        # This is an optional feature; you can still make a request without setting it.
+        custom_headers_map = {"category": Category.US_STOCK.name}
+        request.add_custom_headers(custom_headers_map)
 
         try:
             response = api_client.get_response(request)

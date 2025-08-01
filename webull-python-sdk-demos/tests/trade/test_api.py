@@ -221,13 +221,22 @@ class TestApi(unittest.TestCase):
         }
         """
 
+        # This is an optional feature; you can still make a request without setting it.
+        custom_headers_map = {"category": Category.US_STOCK.name}
+        api.order.add_custom_headers(custom_headers_map)
         res = api.order.place_order(stock_order['account_id'], **stock_order['stock_order'])
+        api.order.remove_custom_headers()
         if res.status_code == 200:
             print('place order res:', res.json())
         res = api.order.replace_order(stock_order['account_id'], **stock_order['stock_order'])
         if res.status_code == 200:
             print('replace order res:', res.json())
+
+        # This is an optional feature; you can still make a request without setting it.
+        custom_headers_map = {"category": Category.US_STOCK.name}
+        api.order.add_custom_headers(custom_headers_map)
         res = api.order.place_order_v2(stock_order['account_id'], stock_order['stock_order'])
+        api.order.remove_custom_headers()
         if res.status_code == 200:
             print('place order v2 res:', res.json())
         res = api.order.replace_order_v2(stock_order['account_id'], stock_order['stock_order'])
@@ -298,7 +307,11 @@ class TestApi(unittest.TestCase):
         sleep(5)
 
         # place
+        # This is an optional feature; you can still make a request without setting it.
+        custom_headers_map = {"category": Category.US_OPTION.name}
+        api.order.add_custom_headers(custom_headers_map)
         res = api.order.place_option(account_id, option_new_orders)
+        api.order.remove_custom_headers()
         if res.status_code == 200:
             print("place option=" + json.dumps(res.json(), indent=4))
         sleep(5)
