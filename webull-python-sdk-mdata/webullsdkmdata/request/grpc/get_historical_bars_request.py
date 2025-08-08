@@ -19,11 +19,17 @@ from webullsdkmdata.request.grpc.base_request import GRPCBaseRequest
 
 class GetHistoricalBarsRequest(GRPCBaseRequest):
 
-    def __init__(self, symbol, category, timespan, count='200'):
+    def __init__(self, symbol, category, timespan, count='200', real_time_required=None, trading_sessions=None):
         request = quote_pb2.BarsRequest(
             symbol=symbol,
             category=category,
             timespan=timespan,
             count=count
         )
+
+        if real_time_required:
+            request.real_time_required = real_time_required
+        if trading_sessions:
+            request.trading_sessions = ','.join(trading_sessions)
+
         GRPCBaseRequest.__init__(self, "/market-data/bars", request, version='v1')

@@ -80,6 +80,27 @@ if __name__ == "__main__":
         print('get_history_bar request end', '*' * 20)
         # Process results...
 
+        print('\nget_history_bar request', '*' * 20)
+        trading_sessions = ['PRE', 'RTH']
+        res = market_data.get_history_bar('AAPL', 'US_STOCK', 'M5', real_time_required="N", trading_sessions=trading_sessions)
+        print(res.request_id)
+        print(res.status_code)
+        print(res.msg)
+        print(res.json())
+        print('get_history_bar request end', '*' * 20)
+        time.sleep(2)
+        # Process results...
+
+        print('\nget_history_bar request', '*' * 20)
+        symbols = ['AAPL', 'F']
+        res = market_data.get_batch_history_bar(symbols, 'US_STOCK', 'M1', count=1, real_time_required="N", trading_sessions=trading_sessions)
+        print(res.request_id)
+        print(res.status_code)
+        print(res.msg)
+        print(res.json())
+        print('get_history_bar request end', '*' * 20)
+        # Process results...
+
         time.sleep(2)
         print('get_quote request', '*' * 20)
         res = market_data.get_quote('AAPL', 'US_STOCK')

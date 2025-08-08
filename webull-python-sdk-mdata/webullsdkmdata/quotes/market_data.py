@@ -23,7 +23,7 @@ class MarketData:
     def __init__(self, api_client):
         self.client = api_client
 
-    def get_history_bar(self, symbol, category, timespan, count='200'):
+    def get_history_bar(self, symbol, category, timespan, count='200', real_time_required=None, trading_sessions=None):
         """
         Returns to Instrument in the window aggregated data.
         According to the last N K-lines of the stock code, it supports various granularity K-lines such as m1 and m5.
@@ -34,16 +34,20 @@ class MarketData:
         :param category: Security type, enumeration.
         :param timespan: K-line time granularity
         :param count: The number of lines: the default is 200, and the maximum limit is 1200
+        :param real_time_required: Returns the latest trade quote data. By default, the most recent market data is returned.
+        :param trading_sessions: Specify trading session, multiple selections are allowed
         """
         history_bar_request = GetHistoricalBarsRequest()
         history_bar_request.set_symbol(symbol)
         history_bar_request.set_category(category)
         history_bar_request.set_timespan(timespan)
         history_bar_request.set_count(count)
+        history_bar_request.set_real_time_required(real_time_required)
+        history_bar_request.set_trading_sessions(trading_sessions)
         response = self.client.get_response(history_bar_request)
         return response
 
-    def get_batch_history_bar(self, symbols, category, timespan, count='200'):
+    def get_batch_history_bar(self, symbols, category, timespan, count='200', real_time_required=None, trading_sessions=None):
         """
         Batch query K-line data for multiple symbols, returning aggregated data within the window.
         According to the last N K-lines of the stock code, it supports various granularity K-lines such as m1 and m5.
@@ -54,12 +58,16 @@ class MarketData:
         :param category: Security type, enumeration
         :param timespan: K-line interval
         :param count: Number of K-lines to return, default is 200, maximum is 1200
+        :param real_time_required: Returns the latest trade quote data. By default, the most recent market data is returned.
+        :param trading_sessions: Specify trading session, multiple selections are allowed
         """
         history_bar_request = BatchHistoricalBarsRequest()
         history_bar_request.set_symbols(symbols)
         history_bar_request.set_category(category)
         history_bar_request.set_timespan(timespan)
         history_bar_request.set_count(count)
+        history_bar_request.set_real_time_required(real_time_required)
+        history_bar_request.set_trading_sessions(trading_sessions)
         response = self.client.get_response(history_bar_request)
         return response
 

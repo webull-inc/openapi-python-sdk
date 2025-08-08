@@ -16,6 +16,7 @@
 from webullsdktrade.request.v2.get_account_balance_request import AccountBalanceRequest
 from webullsdktrade.request.v2.get_account_list import GetAccountList
 from webullsdktrade.request.v2.get_account_positions_request import AccountPositionsRequest
+from webullsdktrade.request.v2.get_account_position_details_request import AccountPositionDetailsRequest
 
 
 class AccountV2:
@@ -52,4 +53,24 @@ class AccountV2:
         account_positions_request = AccountPositionsRequest()
         account_positions_request.set_account_id(account_id)
         response = self.client.get_response(account_positions_request)
+        return response
+
+    def get_account_position_details(self, account_id, size, ticker_id, last_instrument_id):
+        """
+        Query the account position list according to the account ID page.
+
+        :param account_id: Account ID
+        :param ticker_id: Ticker ID
+        :param size: Number of entries per page: default value is 20,
+        :param last_instrument_id: The last position id of the previous page,if not passed,
+        the first page is checked by default
+        """
+        account_position_details_request = AccountPositionDetailsRequest()
+        account_position_details_request.set_account_id(account_id)
+        account_position_details_request.set_ticker_id(ticker_id)
+        if size is not None:
+            account_position_details_request.set_size(size)
+        if last_instrument_id is not None:
+            account_position_details_request.set_last_instrument_id(last_instrument_id)
+        response = self.client.get_response(account_position_details_request)
         return response
