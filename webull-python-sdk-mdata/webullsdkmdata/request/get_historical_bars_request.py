@@ -30,3 +30,11 @@ class GetHistoricalBarsRequest(ApiRequest):
 
     def set_count(self, count='200'):
         self.add_query_param("count", count)
+
+    def set_real_time_required(self, real_time_required):
+        if real_time_required:
+            self.add_query_param("real_time_required", real_time_required)
+
+    def set_trading_sessions(self, trading_sessions):
+        if trading_sessions:
+            self.add_query_param("trading_sessions", ','.join(trading_sessions))

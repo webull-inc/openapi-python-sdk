@@ -26,4 +26,6 @@ class Category(EasyEnum):
     HK_ETF = (6, 'HK ETF')
     CN_STOCK = (7, "CN STOCK")
     NFT = (8, "NFT")
-    US_CFDONSTOCK = (8, "US CFDON STOCK")
+    US_CFDONSTOCK = (9, "US CFDON STOCK")
+    JP_STOCK = (10, "JP STOCK")
+    JP_ETF = (11, "JP ETF")

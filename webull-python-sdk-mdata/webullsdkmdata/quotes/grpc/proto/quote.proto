@@ -24,6 +24,8 @@ message BarsRequest {
     string category = 2;
     string timespan = 3;
     string count = 4;
+    string real_time_required = 5;
+    string trading_sessions = 6;
 }
 
 message BarsResponse {
@@ -46,6 +48,8 @@ message BatchBarsRequest{
   string category = 2;
   string timespan = 3;
   int32 count = 4;
+  string real_time_required = 5;
+  repeated string trading_sessions = 6;
 }
 
 message BatchBarsResponse {

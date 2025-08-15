@@ -205,3 +205,18 @@ class TestApi(unittest.TestCase):
         )
         if res.status_code == 200:
             print('cn batch history bar:', res.json())
+        trading_sessions = ['PRE', 'RTH', 'ATH', 'OVN']
+        res = api.market_data.get_history_bar('AAPL', 'US_STOCK', 'M1', 200, 'N', trading_sessions)
+        if res.status_code == 200:
+            print('us stock history bar:', res.json())
+
+        res = api.market_data.get_batch_history_bar(
+            symbols=['AAPL', 'TSLA'],
+            category=Category.US_STOCK.name,
+            timespan='M1',
+            count=1,
+            real_time_required='N',
+            trading_sessions=trading_sessions
+        )
+        if res.status_code == 200:
+            print('us batch history bar:', res.json())

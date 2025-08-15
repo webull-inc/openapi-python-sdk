@@ -30,3 +30,11 @@ class BatchHistoricalBarsRequest(ApiRequest):
 
     def set_count(self, count='200'):
         self.add_body_params("count", count)
+
+    def set_real_time_required(self, real_time_required):
+        if real_time_required:
+            self.add_body_params("real_time_required", real_time_required)
+
+    def set_trading_sessions(self, trading_sessions):
+        if trading_sessions:
+            self.add_body_params("trading_sessions", trading_sessions)

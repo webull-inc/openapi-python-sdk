@@ -18,7 +18,7 @@ from webullsdkmdata.request.grpc.base_request import GRPCBaseRequest
 
 class GetBatchHistoricalBarsRequest(GRPCBaseRequest):
 
-    def __init__(self, symbols, category, timespan, count='200'):
+    def __init__(self, symbols, category, timespan, count='200', real_time_required=None, trading_sessions=None):
         """
         Initialize a batch historical bars request.
 
@@ -26,10 +26,18 @@ class GetBatchHistoricalBarsRequest(GRPCBaseRequest):
         :param category: Security type, enumeration.
         :param timespan: K-line time granularity
         :param count: The number of lines: the default is 200, and the maximum limit is 1200
+        :param real_time_required: Returns the latest trade quote data. By default, the most recent market data is returned.
+        :param trading_sessions: Specify trading session, multiple selections are allowed
         """
         request = quote_pb2.BatchBarsRequest()
         request.symbols.extend(symbols)
         request.category = category
         request.timespan = timespan
         request.count = count
+
+        if real_time_required:
+            request.real_time_required = real_time_required
+        if trading_sessions:
+            request.trading_sessions.extend(trading_sessions)
+
         GRPCBaseRequest.__init__(self, "/market-data/batch-bars", request, version='v1')
