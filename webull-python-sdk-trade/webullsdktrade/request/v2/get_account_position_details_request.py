@@ -26,8 +26,8 @@ class AccountPositionDetailsRequest(ApiRequest):
     def set_size(self, size):
         self.add_query_param("size", size)
 
-    def set_ticker_id(self, ticker_id):
-        self.add_query_param("ticker_id", ticker_id)
+    def set_instrument_id(self, instrument_id):
+        self.add_query_param("instrument_id", instrument_id)
 
     def set_last_instrument_id(self, last_instrument_id):
         self.add_query_param("last_instrument_id", last_instrument_id)
