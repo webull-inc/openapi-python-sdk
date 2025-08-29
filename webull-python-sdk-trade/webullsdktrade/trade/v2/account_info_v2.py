@@ -55,7 +55,7 @@ class AccountV2:
         response = self.client.get_response(account_positions_request)
         return response
 
-    def get_account_position_details(self, account_id, size, ticker_id, last_instrument_id):
+    def get_account_position_details(self, account_id, size, instrument_id, last_instrument_id):
         """
         Query the account position list according to the account ID page.
 
@@ -67,7 +67,7 @@ class AccountV2:
         """
         account_position_details_request = AccountPositionDetailsRequest()
         account_position_details_request.set_account_id(account_id)
-        account_position_details_request.set_ticker_id(ticker_id)
+        account_position_details_request.set_instrument_id(instrument_id)
         if size is not None:
             account_position_details_request.set_size(size)
         if last_instrument_id is not None:
