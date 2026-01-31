@@ -78,13 +78,7 @@ class TestApi(unittest.TestCase):
             "support_trading_session": "N",
             "side": "BUY",
             "time_in_force": "DAY",
-            "entrust_type": "QTY",
-            # "account_tax_type": "GENERAL"
-            # "total_cash_amount": "100.20"
-            # "sender_sub_id": "123321-lzg",
-            # "no_party_ids":[
-            #     {"party_id":"BNG144.666555","party_id_source":"D","party_role":"3"}
-            # ]
+            "entrust_type": "QTY"
         }
 
         # This is an optional feature; you can still make a request without setting it.
