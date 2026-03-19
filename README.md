@@ -1,5 +1,8 @@
 # Webull OpenAPI Python SDK
 
+Note:This is an older version of the Webull SDK. Many new features are no longer being updated. It is recommended to use the new version of the Webull SDK.
+For reference, please visit: https://github.com/webull-inc/webull-openapi-python-sdk
+
 Webull OpenAPI aims to provide quantitative trading investors with convenient, fast and secure services. Webull aims to help every quant traders achieve flexible and changeable trading or market strategies.
 
 The main function:
