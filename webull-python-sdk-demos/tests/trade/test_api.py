@@ -77,7 +77,7 @@ class TestApi(unittest.TestCase):
         if res.status_code == 200:
             print('cn stock quote:', res.json())
         res = api.market_data.get_batch_history_bar(
-            symbols=['AAPL', 'TSLA'],
+            symbols=['TSLA', 'AAPL'],
             category=Category.US_STOCK.name,
             timespan='M1',
             count=1
